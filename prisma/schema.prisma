@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading: 
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -14,8 +14,132 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id String @id @default(cuid())
+model Activity {
+    id   String @id @default(uuid())
+    type String
+}
+
+enum Condition {
+    NEW
+    USED
+    UNKNOWN
+}
+
+model Ofert {
+    id          String    @id @default(cuid())
+    title       String
+    description String
+    price       Decimal   @db.Decimal(10, 2)
+    condition   Condition
+    // TODO: multiple images
+    image       String
+    category    String
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    user        User      @relation(fields: [userId], references: [id])
+    userId      String
+}
+
+// TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+model Post {
+    id               String    @id @default(cuid())
+    title            String
+    content          String
+    createdAt        DateTime  @default(now())
+    updatedAt        DateTime  @updatedAt
+    user             User      @relation(fields: [userId], references: [id])
+    userId           String
+    comments         Comment[]
+    numberOfComments Int       @default(0)
+}
+
+model Event {
+    id                String              @id @default(cuid())
+    title             String
+    description       String
+    from              DateTime
+    to                DateTime
+    location          String
+    createdAt         DateTime            @default(now())
+    updatedAt         DateTime            @updatedAt
+    user              User                @relation(fields: [userId], references: [id])
+    userId            String
+    interestedInEvent InterestedInEvent[]
+}
+
+model InterestedInEvent {
+    id      String @id @default(cuid())
+    user    User   @relation(fields: [userId], references: [id])
+    userId  String
+    event   Event  @relation(fields: [eventId], references: [id])
+    eventId String
+}
+
+model Poll {
+    id          String   @id @default(cuid())
+    title       String
+    description String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    user        User     @relation(fields: [userId], references: [id])
+    userId      String
+    options     Option[]
+}
+
+model Option {
+    id     String @id @default(cuid())
+    title  String
+    poll   Poll   @relation(fields: [pollId], references: [id])
+    pollId String
+    votes  Vote[]
+}
+
+model Vote {
+    id       String @id @default(cuid())
+    user     User   @relation(fields: [userId], references: [id])
+    userId   String
+    option   Option @relation(fields: [optionId], references: [id])
+    optionId String
+}
+
+// TODO: nested comments
+// TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+model Comment {
+    id        String   @id @default(cuid())
+    content   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    post      Post     @relation(fields: [postId], references: [id])
+    postId    String
+}
+
+enum InteractionType {
+    LIKE
+    DISLIKE
+    SAD
+    ANGRY
+    LOVE
+}
+
+enum InteractionModel {
+    POST
+    COMMENT
+    EVENT
+    POLL
+}
+
+model Interaction {
+    id        String           @id @default(cuid())
+    type      InteractionType
+    model     InteractionModel
+    createdAt DateTime         @default(now())
+    updatedAt DateTime         @updatedAt
+    user      User             @relation(fields: [userId], references: [id])
+    userId    String
+    postId    String?
+    commentId String?
 }
 
 // Necessary for Next auth
@@ -46,13 +170,21 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    id                 String              @id @default(cuid())
+    name               String?
+    email              String?             @unique
+    emailVerified      DateTime?
+    image              String?
+    accounts           Account[]
+    sessions           Session[]
+    oferts             Ofert[]
+    posts              Post[]
+    comments           Comment[]
+    interactions       Interaction[]
+    events             Event[]
+    interestedInEvents InterestedInEvent[]
+    polls              Poll[]
+    votes              Vote[]
 }
 
 model VerificationToken {
