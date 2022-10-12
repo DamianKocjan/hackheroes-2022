@@ -1,10 +1,12 @@
 import React from "react";
+import { useFeedLimit } from "../../../hooks/useFeedLimit";
 import { trpc } from "../../../utils/trpc";
 
 export const Feed: React.FC = () => {
+  const limit = useFeedLimit();
   const { data } = trpc.feed.getAll.useInfiniteQuery(
     {
-      limit: 10,
+      limit,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
