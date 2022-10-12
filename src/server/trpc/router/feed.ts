@@ -1,4 +1,4 @@
-import { Event, Ofert, Poll, Post } from "@prisma/client";
+import type { Activity, Event, Ofert, Poll, Post } from "@prisma/client";
 import { z } from "zod";
 import { t } from "../trpc";
 
@@ -44,15 +44,17 @@ export const feedRouter = t.router({
         },
       });
 
-      const feed: (Ofert | Post | Event | Poll)[] = await Promise.all(
-        content.map((contentItem) => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          return prisma[contentItem.type].findUnique({
-            where: { id: contentItem.id },
-          });
-        })
-      );
+      const feed: ((Ofert | Post | Event | Poll) & Activity)[] =
+        await Promise.all(
+          content.map((contentItem) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const item = prisma[contentItem.type].findUnique({
+              where: { id: contentItem.id },
+            });
+            return Object.assign(item, { type: contentItem.type });
+          })
+        );
 
       let nextCursor: string | undefined = undefined;
       if (feed.length > limit) {
