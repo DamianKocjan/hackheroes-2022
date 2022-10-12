@@ -1,4 +1,5 @@
 import { Popover, Transition } from "@headlessui/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import {
   ArrowClockwise,
@@ -82,6 +83,8 @@ const resources = [
 ];
 
 export const Nav: React.FC = () => {
+  const { data: sessionData } = useSession();
+
   return (
     <Popover className="relative bg-white">
       <div className="flex items-center justify-between px-4 py-6 sm:px-6 md:justify-start md:space-x-10">
@@ -257,18 +260,12 @@ export const Nav: React.FC = () => {
           </Popover>
         </Popover.Group>
         <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-          <Link
-            href="#"
-            className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="#"
+          <button
             className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+            onClick={sessionData ? () => signOut() : () => signIn("google")}
           >
-            Sign up
-          </Link>
+            {sessionData ? "Sign out" : "Sign in"}
+          </button>
         </div>
       </div>
 
@@ -359,20 +356,15 @@ export const Nav: React.FC = () => {
                 ))}
               </div>
               <div className="mt-6">
-                <Link
-                  href="#"
-                  className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                >
-                  Sign up
-                </Link>
                 <p className="mt-6 text-center text-base font-medium text-gray-500">
-                  Existing customer?{" "}
-                  <Link
-                    href="#"
+                  <button
                     className="text-indigo-600 hover:text-indigo-500"
+                    onClick={
+                      sessionData ? () => signOut() : () => signIn("google")
+                    }
                   >
-                    Sign in
-                  </Link>
+                    {sessionData ? "Sign out" : "Sign in"}
+                  </button>
                 </p>
               </div>
             </div>
