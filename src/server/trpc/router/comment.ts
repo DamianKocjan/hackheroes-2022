@@ -23,6 +23,9 @@ export const commentRouter = t.router({
         where: {
           postId: postId,
         },
+        include: {
+          user: true,
+        },
       });
 
       let nextCursor: string | undefined = undefined;

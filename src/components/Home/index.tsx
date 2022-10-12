@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { Container } from "../common/Container";
+import { Feed } from "./Feed";
+import { ActivityOfert } from "./Feed/Activity/Ofert";
 
 export const Home: NextPage = () => {
   return (
@@ -9,6 +11,8 @@ export const Home: NextPage = () => {
       <Link href="/wdadw">
         <a>wadwda</a>
       </Link>
+      <Feed />
+      <ActivityOfert />
     </Container>
   );
 };
