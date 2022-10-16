@@ -1,6 +1,6 @@
 import { Popover, Transition } from "@headlessui/react";
 import { useLottie } from "lottie-react";
-import React, { Fragment, useCallback, useMemo } from "react";
+import React, { ComponentProps, Fragment, useCallback, useMemo } from "react";
 import { useNumberFormatter } from "../../../../hooks/formatters/useNumberFormatter";
 import { classNames } from "../../../../utils/classnames";
 import { trpc } from "../../../../utils/trpc";
@@ -12,7 +12,7 @@ import loveAnimation from "../../../../../public/love.json";
 import sadAnimation from "../../../../../public/sad.json";
 import wowAnimation from "../../../../../public/wow.json";
 
-interface InteractionProps {
+interface InteractionProps extends ComponentProps<"button"> {
   animationData: unknown;
   alt: string;
   className?: string;
@@ -25,11 +25,8 @@ interface InteractionProps {
 const Interaction: React.FC<InteractionProps> = ({
   alt,
   animationData,
-  className,
   lottieClassName,
-  title,
-  onClick,
-  disabled,
+  ...props
 }) => {
   const { View, play, stop } = useLottie({
     animationData,
@@ -44,12 +41,9 @@ const Interaction: React.FC<InteractionProps> = ({
 
   return (
     <button
-      className={className}
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}
-      title={title}
-      onClick={onClick}
-      disabled={disabled}
+      {...props}
     >
       {View}
     </button>
@@ -135,6 +129,7 @@ export const Interactions: React.FC<InteractionsProps> = ({
                         ? "h-10 w-10"
                         : "h-8 w-8"
                     }
+                    aria-label="Like"
                   />
 
                   <Transition
@@ -182,6 +177,7 @@ export const Interactions: React.FC<InteractionsProps> = ({
                                 }
                                 alt={interaction.type}
                                 lottieClassName="h-8 w-8"
+                                aria-label={interaction.type.toLowerCase()}
                               />
                               <span className="text-xs text-gray-500">
                                 {formattedInteractions?.[i]}
