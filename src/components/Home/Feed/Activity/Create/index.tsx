@@ -25,8 +25,8 @@ export const CreateActivity: React.FC = () => {
     event: {
       title: "",
       description: "",
-      from: "",
-      to: "",
+      from: new Date().toISOString(),
+      to: new Date().toISOString(),
       location: "",
     },
     ofert: {

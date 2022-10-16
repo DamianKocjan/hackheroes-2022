@@ -48,7 +48,7 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
             required
             type="datetime-local"
             placeholder="From..."
-            value={data.from}
+            value={new Date(data.from).toISOString().slice(0, 16)}
             onChange={(e) =>
               handleSetData("from", new Date(e.target.value).toISOString())
             }
@@ -64,7 +64,7 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
             required
             type="datetime-local"
             placeholder="To..."
-            value={data.to}
+            value={new Date(data.to).toISOString().slice(0, 16)}
             onChange={(e) =>
               handleSetData("to", new Date(e.target.value).toISOString())
             }
