@@ -18,6 +18,7 @@ export const Post: React.FC<PostProps> = ({ data, handleSetData }) => {
         <Input
           name="title"
           id="title"
+          required
           placeholder="Your title..."
           value={data.title}
           onChange={(e) => handleSetData("title", e.target.value)}
@@ -30,6 +31,7 @@ export const Post: React.FC<PostProps> = ({ data, handleSetData }) => {
         <Textarea
           name="content"
           id="content"
+          required
           placeholder="Your content..."
           value={data.content}
           onChange={(e) => handleSetData("content", e.target.value)}

@@ -33,6 +33,7 @@ export const Poll: React.FC<PollProps> = ({ data, handleSetData }) => {
         <Input
           name="title"
           id="title"
+          required
           placeholder="Your title..."
           value={data.title}
           onChange={(e) => handleSetData("title", e.target.value)}
@@ -45,6 +46,7 @@ export const Poll: React.FC<PollProps> = ({ data, handleSetData }) => {
         <Textarea
           name="description"
           id="description"
+          required
           placeholder="Your description..."
           value={data.description}
           onChange={(e) => handleSetData("description", e.target.value)}

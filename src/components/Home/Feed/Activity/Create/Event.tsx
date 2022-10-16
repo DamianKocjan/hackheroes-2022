@@ -18,6 +18,7 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
         <Input
           name="title"
           id="title"
+          required
           placeholder="Your title..."
           value={data.title}
           onChange={(e) => handleSetData("title", e.target.value)}
@@ -30,6 +31,7 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
         <Textarea
           name="description"
           id="description"
+          required
           placeholder="Your description..."
           value={data.description}
           onChange={(e) => handleSetData("description", e.target.value)}
@@ -43,10 +45,13 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
           <Input
             name="from"
             id="from"
-            type="date"
+            required
+            type="datetime-local"
             placeholder="From..."
             value={data.from}
-            onChange={(e) => handleSetData("from", e.target.value)}
+            onChange={(e) =>
+              handleSetData("from", new Date(e.target.value).toISOString())
+            }
           />
         </div>
         <div className="border-b border-gray-200 focus-within:border-indigo-600">
@@ -56,10 +61,13 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
           <Input
             name="to"
             id="to"
-            type="date"
+            required
+            type="datetime-local"
             placeholder="To..."
             value={data.to}
-            onChange={(e) => handleSetData("to", e.target.value)}
+            onChange={(e) =>
+              handleSetData("to", new Date(e.target.value).toISOString())
+            }
           />
         </div>
       </div>
@@ -70,6 +78,7 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
         <Input
           name="location"
           id="location"
+          required
           placeholder="Location..."
           value={data.location}
           onChange={(e) => handleSetData("location", e.target.value)}

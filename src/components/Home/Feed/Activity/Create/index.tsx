@@ -75,7 +75,7 @@ export const CreateActivity: React.FC = () => {
         return !!(
           data.poll.title.trim() &&
           data.poll.description.trim() &&
-          data.poll.options.length > 2 &&
+          data.poll.options.length > 1 &&
           data.poll.options.length < 11 &&
           data.poll.options.every((option) => !!option.trim())
         );

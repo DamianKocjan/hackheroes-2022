@@ -22,6 +22,7 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
         <Input
           name="title"
           id="title"
+          required
           placeholder="Your title..."
           value={data.title}
           onChange={(e) => handleSetData("title", e.target.value)}
@@ -34,6 +35,7 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
         <Textarea
           name="description"
           id="description"
+          required
           placeholder="Your description..."
           value={data.description}
           onChange={(e) => handleSetData("description", e.target.value)}
@@ -48,10 +50,12 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
             name="price"
             id="price"
             type="number"
+            inputMode="numeric"
             pattern="^\d*(\.\d{0,2})?$"
+            required
             placeholder="Price..."
             value={data.price}
-            onChange={(e) => handleSetData("price", e.target.value)}
+            onChange={(e) => handleSetData("price", parseFloat(e.target.value))}
             className="border-none"
           />
         </div>
@@ -123,6 +127,7 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
           name="image"
           id="image"
           type="image"
+          required
           placeholder="Image..."
           value={data.image}
           onChange={(e) => handleSetData("image", e.target.value)}
@@ -135,6 +140,7 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
         <Input
           name="category"
           id="category"
+          required
           placeholder="Category..."
           value={data.category}
           onChange={(e) => handleSetData("category", e.target.value)}
