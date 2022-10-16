@@ -1,6 +1,6 @@
 import type { Event, Ofert, Poll, Post } from "@prisma/client";
 import { z } from "zod";
-import { t } from "../trpc";
+import { authedProcedure, t } from "../trpc";
 
 export const feedRouter = t.router({
   get: t.procedure
@@ -124,6 +124,158 @@ export const feedRouter = t.router({
       return {
         items: feed,
         nextCursor,
+      };
+    }),
+  create: authedProcedure
+    .input(
+      z.object({
+        type: z.enum(["ofert", "post", "event", "poll"]),
+        data: z.object({
+          event: z
+            .object({
+              title: z.string(),
+              description: z.string(),
+              from: z.string(),
+              to: z.string(),
+              location: z.string(),
+            })
+            .optional(),
+          ofert: z
+            .object({
+              title: z.string(),
+              description: z.string(),
+              price: z.number(),
+              condition: z.enum(["NEW", "USED", "UNKNOWN"]),
+              image: z.string(),
+              category: z.string(),
+            })
+            .optional(),
+          poll: z
+            .object({
+              title: z.string(),
+              description: z.string(),
+              options: z.array(z.string()).min(2).max(10),
+            })
+            .optional(),
+          post: z
+            .object({
+              title: z.string(),
+              content: z.string(),
+            })
+            .optional(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { type, data } = input;
+
+      const activity = await ctx.prisma.activity.create({
+        data: {
+          type,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (type === "poll") {
+        if (!data.poll) {
+          throw new Error("INVALID_DATA");
+        }
+
+        await ctx.prisma.poll.create({
+          data: {
+            id: activity.id,
+            title: data.poll.title,
+            description: data.poll.description,
+            options: {
+              createMany: {
+                data: data.poll.options.map((option) => ({
+                  title: option,
+                })),
+              },
+            },
+            user: {
+              connect: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+      } else if (type === "ofert") {
+        if (!data.ofert) {
+          throw new Error("INVALID_DATA");
+        }
+
+        await ctx.prisma.ofert.create({
+          data: {
+            id: activity.id,
+            title: data.ofert.title,
+            description: data.ofert.description,
+            price: data.ofert.price,
+            condition: data.ofert.condition,
+            image: data.ofert.image,
+            category: data.ofert.category,
+            user: {
+              connect: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+      } else if (type === "event") {
+        if (!data.event) {
+          throw new Error("INVALID_DATA");
+        }
+
+        await ctx.prisma.event.create({
+          data: {
+            id: activity.id,
+            title: data.event.title,
+            description: data.event.description,
+            from: data.event.from,
+            to: data.event.to,
+            location: data.event.location,
+            user: {
+              connect: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+      } else {
+        if (!data.post) {
+          throw new Error("INVALID_DATA");
+        }
+
+        await ctx.prisma.post.create({
+          data: {
+            id: activity.id,
+            title: data.post.title,
+            content: data.post.content,
+            user: {
+              connect: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+      }
+
+      return {
+        id: activity.id,
       };
     }),
 });

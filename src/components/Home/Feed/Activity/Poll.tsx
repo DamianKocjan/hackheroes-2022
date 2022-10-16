@@ -112,7 +112,7 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
                 </button>
               ))
             )}
-            {totalVotes && totalVotes > 0 && (
+            {totalVotes !== undefined && totalVotes > 0 && (
               <p className="mt-2 text-gray-500">
                 {totalVotes} {totalVotes === 0 ? "vote" : "votes"}
               </p>

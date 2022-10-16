@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import { useCommentLimit } from "../../../../../hooks/useCommentLimit";
 import { trpc } from "../../../../../utils/trpc";
+import { Button } from "../../../../shared/Button";
 import { ErrorAlert } from "../../../../shared/ErrorAlert";
 import { LoadingSpinner } from "../../../../shared/LoadingSpinner";
 import { Comment } from "./Comment";
@@ -57,12 +58,9 @@ export const CommentSection: React.FC<CommentsProps> = ({ model, modelId }) => {
           )}
 
           {hasNextPage && !isFetchingNextPage && (
-            <button
-              className="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={async () => await fetchNextPage()}
-            >
+            <Button onClick={async () => await fetchNextPage()}>
               Load more
-            </button>
+            </Button>
           )}
 
           {isFetchingNextPage && (

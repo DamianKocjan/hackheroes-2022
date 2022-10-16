@@ -6,6 +6,7 @@ import { ErrorAlert } from "../../shared/ErrorAlert";
 import { InfiniteLoader } from "../../shared/InfiniteLoader";
 import { LoadingSpinner } from "../../shared/LoadingSpinner";
 import { Activity, ActivityProps } from "./Activity";
+import { CreateActivity } from "./Activity/Create";
 
 export const Feed: React.FC = () => {
   const limit = useFeedLimit();
@@ -29,6 +30,8 @@ export const Feed: React.FC = () => {
 
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-4">
+      <CreateActivity />
+
       {isLoading ? (
         <div className="flex items-center justify-center">
           <LoadingSpinner />
