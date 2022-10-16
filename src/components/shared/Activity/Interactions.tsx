@@ -100,7 +100,7 @@ export const Interactions: React.FC<InteractionsProps> = ({
         {isLoading ? (
           <div className="h-6 w-6 animate-pulse rounded-full bg-gray-300" />
         ) : isError ? (
-          <div>{error.message}</div>
+          <div>{error?.message || error?.toString()}</div>
         ) : (
           <>
             <Popover className="relative">
@@ -109,19 +109,21 @@ export const Interactions: React.FC<InteractionsProps> = ({
                   <Popover.Button
                     as={Interaction}
                     className={classNames(
-                      data.hasInteracted
+                      data?.hasInteracted
                         ? "bg-gray-100 hover:bg-gray-200"
                         : "hover:bg-gray-100",
                       "flex h-8 w-8 items-center justify-center rounded-full disabled:opacity-50"
                     )}
                     animationData={
                       interactionAnimations[
-                        data.hasInteracted?.type || mostInteractions || "LIKE"
+                        data?.hasInteracted?.type || mostInteractions || "LIKE"
                       ]
                     }
-                    alt={data.hasInteracted?.type || mostInteractions || "LIKE"}
+                    alt={
+                      data?.hasInteracted?.type || mostInteractions || "LIKE"
+                    }
                     lottieClassName={
-                      data.hasInteracted?.type ||
+                      data?.hasInteracted?.type ||
                       mostInteractions ||
                       "LIKE" === "LIKE"
                         ? "h-10 w-10"

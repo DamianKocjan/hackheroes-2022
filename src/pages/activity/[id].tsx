@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { PrismaClient } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { ActivityDetail } from "../../components/ActivityDetail";
@@ -56,6 +57,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     });
 
     if (activityDetail) {
+      // @ts-ignore
       activityDetail.price = parseFloat(activityDetail.price);
     }
   } else if (activity.type === "post") {
@@ -86,8 +88,12 @@ export const getServerSideProps: GetServerSideProps = async ({
       },
     });
 
-    activityDetail.from = activityDetail.from.toISOString();
-    activityDetail.to = activityDetail.to.toISOString();
+    if (activityDetail) {
+      // @ts-ignore
+      activityDetail.from = activityDetail.from.toISOString();
+      // @ts-ignore
+      activityDetail.to = activityDetail.to.toISOString();
+    }
   } else {
     activityDetail = await prisma.poll.findUnique({
       where: { id },

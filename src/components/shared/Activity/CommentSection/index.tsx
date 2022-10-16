@@ -51,9 +51,9 @@ export const CommentSection: React.FC<CommentsProps> = ({ model, modelId }) => {
           title="Something went wrong!"
           message={error?.message ?? String(error)}
         />
-      ) : data.pages?.[0]?.items.length !== 0 ? (
+      ) : data?.pages?.[0]?.items.length !== 0 ? (
         <div className="flex flex-col gap-4">
-          {data.pages.map((page) =>
+          {data?.pages.map((page) =>
             page.items.map((item) => <Comment key={item.id} {...item} />)
           )}
 

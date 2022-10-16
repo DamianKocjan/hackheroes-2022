@@ -33,6 +33,8 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
   const [openCommentSection, setOpenCommentSection] = useState(false);
   const numberFormatter = useCurrencyFormatter();
   const formatedPrice = useMemo(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     () => numberFormatter.format(price),
     [price, numberFormatter]
   );

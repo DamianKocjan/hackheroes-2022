@@ -54,22 +54,23 @@ export const Feed: React.FC<FeedProps> = ({ exclude, withCreate }) => {
           title="Something went wrong!"
           message={error?.message ?? String(error)}
         />
-      ) : data.pages?.[0]?.items.length === 0 ? (
+      ) : data?.pages?.[0]?.items.length === 0 ? (
         <EmptyState
           title="No posts yet"
           description="Seems like there are no posts yet."
         />
       ) : (
         <>
-          {data.pages.map((page) =>
-            page.items.map((item) => (
-              <Activity
-                key={item.id}
-                {...(item as ActivityProps)}
-                type={item.type as ActivityType}
-              />
-            ))
-          )}
+          {data !== undefined &&
+            data.pages.map((page) =>
+              page.items.map((item) => (
+                <Activity
+                  key={item.id}
+                  {...(item as ActivityProps)}
+                  type={item.type as ActivityType}
+                />
+              ))
+            )}
           <InfiniteLoader
             callback={() => fetchNextPage()}
             isFetching={isFetching}
