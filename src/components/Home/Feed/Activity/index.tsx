@@ -1,6 +1,8 @@
 import { Event, Ofert, Poll, Post } from "@prisma/client";
 import React from "react";
-import { ActivityOfert } from "./Ofert";
+import { ActivityEvent, ActivityEventProps } from "./Event";
+import { ActivityOfert, ActivityOfertProps } from "./Ofert";
+import { ActivityPoll, ActivityPollProps } from "./Poll";
 import { ActivityPost, ActivityPostProps } from "./Post";
 
 type PartialOfert = Partial<Ofert>;
@@ -21,11 +23,35 @@ export interface ActivityProps
 
 export const Activity: React.FC<ActivityProps> = ({ type, ...props }) => {
   if (type === "ofert") {
-    return <ActivityOfert />;
+    return (
+      <ActivityOfert
+        {...(props as ActivityOfertProps)}
+        interactions={[]}
+        interactionsCount={0}
+      />
+    );
   } else if (type === "event") {
-    return <div>Event</div>;
+    return (
+      <ActivityEvent
+        {...(props as ActivityEventProps)}
+        interactions={[]}
+        interactionsCount={0}
+      />
+    );
   } else if (type === "poll") {
-    return <div>Poll</div>;
+    return (
+      <ActivityPoll
+        {...(props as ActivityPollProps)}
+        interactions={[]}
+        interactionsCount={0}
+      />
+    );
   }
-  return <ActivityPost {...(props as ActivityPostProps)} />;
+  return (
+    <ActivityPost
+      {...(props as ActivityPostProps)}
+      interactions={[]}
+      interactionsCount={0}
+    />
+  );
 };

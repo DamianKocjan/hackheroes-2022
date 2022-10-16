@@ -1,55 +1,108 @@
-import React, { useMemo } from "react";
+import { Ofert } from "@prisma/client";
+import Link from "next/link";
+import React, { useMemo, useState } from "react";
+import { useCurrencyFormatter } from "../../../../hooks/formatters/useCurrencyFormatter";
 import { useFormatRelativeDate } from "../../../../hooks/formatters/useFormatRelativeDate";
+import { ModelData } from "../../../../types";
+import { classNames } from "../../../../utils/classnames";
 import { Avatar } from "../../../shared/Avatar";
+import { CommentSection } from "./CommentSection";
 import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
 
-export const ActivityOfert: React.FC = () => {
+export interface ActivityOfertProps extends Ofert, ModelData {}
+
+export const ActivityOfert: React.FC<ActivityOfertProps> = ({
+  id,
+  user,
+  createdAt,
+  title,
+  condition,
+  category,
+  image,
+  price,
+  description,
+  interactions,
+  interactionsCount,
+  _count,
+}) => {
   const dateFormatter = useFormatRelativeDate();
   const formatedDate = useMemo(
-    () => dateFormatter(new Date()),
-    [dateFormatter]
+    () => dateFormatter(createdAt),
+    [createdAt, dateFormatter]
+  );
+  const [openCommentSection, setOpenCommentSection] = useState(false);
+  const numberFormatter = useCurrencyFormatter();
+  const formatedPrice = useMemo(
+    () => numberFormatter.format(price),
+    [price, numberFormatter]
   );
 
   return (
     <Activity>
       <Activity.Navbar>
         <div className="flex">
-          <Avatar src="https://i.pravatar.cc/150?img=1" alt="avatar" />
+          <Avatar src={user.image} alt="avatar" />
           <div className="ml-4 flex flex-col">
-            <span className="text-sm font-medium text-gray-900">
-              Jane Cooper
-            </span>
+            <Link
+              href={`/user/${user.id}`}
+              className="text-sm font-medium text-gray-900"
+            >
+              {user.name}
+            </Link>
             <span className="text-sm text-gray-500">{formatedDate}</span>
           </div>
         </div>
       </Activity.Navbar>
       <Activity.Body>
         <div className="flex flex-col">
-          <span className="text-sm text-gray-900">Oferta</span>
-          <span className="text-sm text-gray-500">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-            quod, voluptates, quia, voluptas quae voluptatem quibusdam
-            voluptatibus quidem quos natus quas. Quisquam, quae. Quisquam
-            voluptates, quia, voluptas quae voluptatem quibusdam voluptatibus
-            quidem quos natus quas. Quisquam, quae.
-          </span>
+          <h3 className="text-lg">{title}</h3>
+          <img
+            src={image}
+            alt="ofert"
+            className="my-1 h-64 w-full rounded-md object-cover"
+          />
+          <div className="-mt-1 flex text-sm text-gray-500">
+            <p>
+              {category}, condition: {condition.toLowerCase()}
+            </p>
+            <div className="flex-1" />
+          </div>
+          <span className="prose-sm text-gray-900">{description}</span>
+          <div className="mt-3 flex">
+            <p className="text-lg font-semibold text-gray-900">
+              <strong>{formatedPrice}</strong>
+            </p>
+            <div className="flex-1" />
+            <button className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              Buy
+            </button>
+          </div>
         </div>
       </Activity.Body>
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
             <Interactions
-              interactions={[]}
-              interactionsCount={0}
-              modelId="1"
+              interactions={interactions}
+              interactionsCount={interactionsCount}
+              modelId={id}
               modelType="ofert"
             />
-            <div className="flex-1"></div>
-            <button className="text-sm text-gray-500">Comment</button>
+            <div className="flex-1" />
+            <button
+              className={classNames(
+                "text-sm",
+                openCommentSection ? "text-gray-700" : "text-gray-500"
+              )}
+              onClick={() => setOpenCommentSection((val) => !val)}
+            >
+              {_count.comments} Comments
+            </button>
           </div>
         </div>
       </Activity.Footer>
+      {openCommentSection && <CommentSection model="ofert" modelId={id} />}
     </Activity>
   );
 };

@@ -1,18 +1,15 @@
 import type { NextPage } from "next";
-import Link from "next/link";
 import { Container } from "../common/Container";
 import { Feed } from "./Feed";
-import { ActivityOfert } from "./Feed/Activity/Ofert";
+import { GetBackToTop } from "./GetBackToTop";
 
 export const Home: NextPage = () => {
   return (
     <Container title="Home">
-      <h1>Home</h1>
-      <Link href="/wdadw">
-        <a>wadwda</a>
-      </Link>
-      <Feed />
-      <ActivityOfert />
+      <div className="py-4">
+        <GetBackToTop />
+        <Feed />
+      </div>
     </Container>
   );
 };

@@ -1,22 +1,26 @@
-import type { Post } from "@prisma/client";
+import { Event } from "@prisma/client";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 import { useFormatRelativeDate } from "../../../../hooks/formatters/useFormatRelativeDate";
 import { ModelData } from "../../../../types";
 import { classNames } from "../../../../utils/classnames";
+import { isToday } from "../../../../utils/date";
 import { Avatar } from "../../../shared/Avatar";
 import { CommentSection } from "./CommentSection";
 import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
 
-export interface ActivityPostProps extends Post, ModelData {}
+export interface ActivityEventProps extends Event, ModelData {}
 
-export const ActivityPost: React.FC<ActivityPostProps> = ({
+export const ActivityEvent: React.FC<ActivityEventProps> = ({
   id,
   user,
   createdAt,
   title,
-  content,
+  from,
+  to,
+  location,
+  description,
   interactions,
   interactionsCount,
   _count,
@@ -47,7 +51,19 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
       <Activity.Body>
         <div className="flex flex-col">
           <h3 className="text-lg">{title}</h3>
-          <span className="prose-sm text-gray-900">{content}</span>
+          <span className="-mt-1 text-sm text-gray-500">
+            <time dateTime={from.toLocaleString()}>
+              {isToday(from)
+                ? from.toLocaleTimeString()
+                : from.toLocaleDateString()}
+            </time>
+            {" - "}
+            <time dateTime={to.toLocaleString()}>
+              {isToday(to) ? to.toLocaleTimeString() : to.toLocaleDateString()}
+            </time>
+            , {location}
+          </span>
+          <span className="prose-sm text-gray-900">{description}</span>
         </div>
       </Activity.Body>
       <Activity.Footer>
@@ -57,7 +73,7 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
               interactions={interactions}
               interactionsCount={interactionsCount}
               modelId={id}
-              modelType="ofert"
+              modelType="event"
             />
             <div className="flex-1" />
             <button
@@ -72,7 +88,7 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
           </div>
         </div>
       </Activity.Footer>
-      {openCommentSection && <CommentSection model="post" modelId={id} />}
+      {openCommentSection && <CommentSection model="event" modelId={id} />}
     </Activity>
   );
 };

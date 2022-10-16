@@ -7,12 +7,13 @@ export const commentRouter = t.router({
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().nullish(),
-        postId: z.string(),
+        model: z.enum(["post", "ofert", "event", "poll"]),
+        modelId: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 50;
-      const { cursor, postId } = input;
+      const { cursor, model, modelId } = input;
 
       const comments = await ctx.prisma.comment.findMany({
         take: limit + 1,
@@ -21,7 +22,7 @@ export const commentRouter = t.router({
           id: "asc",
         },
         where: {
-          postId: postId,
+          [`${model}Id`]: modelId,
         },
         include: {
           user: true,
@@ -40,14 +41,22 @@ export const commentRouter = t.router({
       };
     }),
   create: authedProcedure
-    .input(z.object({ postId: z.string(), content: z.string() }))
+    .input(
+      z.object({
+        model: z.enum(["post", "ofert", "event", "poll"]),
+        modelId: z.string(),
+        content: z.string(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
+      const { model, modelId, content } = input;
+
       await ctx.prisma.comment.create({
         data: {
-          content: input.content,
-          post: {
+          content: content,
+          [model]: {
             connect: {
-              id: input.postId,
+              id: modelId,
             },
           },
           user: {

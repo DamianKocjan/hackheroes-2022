@@ -1,4 +1,4 @@
-import type { Activity, Event, Ofert, Poll, Post } from "@prisma/client";
+import type { Event, Ofert, Poll, Post } from "@prisma/client";
 import { z } from "zod";
 import { t } from "../trpc";
 
@@ -40,21 +40,80 @@ export const feedRouter = t.router({
         take: limit + 1,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
-          id: "asc",
+          createdAt: "desc",
         },
       });
 
-      const feed: ((Ofert | Post | Event | Poll) & Activity)[] =
-        await Promise.all(
-          content.map((contentItem) => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const item = prisma[contentItem.type].findUnique({
+      const feed = await Promise.all(
+        content.map(async (contentItem) => {
+          let item;
+
+          if (contentItem.type === "ofert") {
+            item = await ctx.prisma.ofert.findUnique({
               where: { id: contentItem.id },
+              include: {
+                user: true,
+                interactions: true,
+                _count: {
+                  select: {
+                    interactions: true,
+                    comments: true,
+                  },
+                },
+              },
             });
-            return Object.assign(item, { type: contentItem.type });
-          })
-        );
+          } else if (contentItem.type === "post") {
+            item = await ctx.prisma.post.findUnique({
+              where: { id: contentItem.id },
+              include: {
+                user: true,
+                interactions: true,
+                _count: {
+                  select: {
+                    interactions: true,
+                    comments: true,
+                  },
+                },
+              },
+            });
+          } else if (contentItem.type === "event") {
+            item = await ctx.prisma.event.findUnique({
+              where: { id: contentItem.id },
+              include: {
+                user: true,
+                interactions: true,
+                _count: {
+                  select: {
+                    interactions: true,
+                    comments: true,
+                    interestedInEvent: true,
+                  },
+                },
+              },
+            });
+          } else {
+            item = await ctx.prisma.poll.findUnique({
+              where: { id: contentItem.id },
+              include: {
+                user: true,
+                interactions: true,
+                _count: {
+                  select: {
+                    interactions: true,
+                    comments: true,
+                  },
+                },
+              },
+            });
+          }
+
+          return {
+            ...item,
+            id: contentItem.id,
+            type: contentItem.type,
+          };
+        })
+      );
 
       let nextCursor: string | undefined = undefined;
       if (feed.length > limit) {

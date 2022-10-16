@@ -1,15 +1,27 @@
 import { useSession } from "next-auth/react";
 import React, { useCallback, useState } from "react";
-import { trpc } from "../../../../utils/trpc";
+import { trpc } from "../../../../../utils/trpc";
+import { Avatar } from "../../../../shared/Avatar";
 
 interface CommentInputProps {
-  postId: string;
+  model: "post" | "ofert" | "event" | "poll";
+  modelId: string;
+  refetch: () => Promise<void>;
 }
 
-export const CommentInput: React.FC<CommentInputProps> = ({ postId }) => {
+export const CommentInput: React.FC<CommentInputProps> = ({
+  model,
+  modelId,
+  refetch,
+}) => {
   const { data: sessionData } = useSession();
   const [content, setContent] = useState("");
-  const mutation = trpc.comment.create.useMutation();
+  const mutation = trpc.comment.create.useMutation({
+    async onSuccess() {
+      setContent("");
+      await refetch();
+    },
+  });
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,21 +32,17 @@ export const CommentInput: React.FC<CommentInputProps> = ({ postId }) => {
 
       await mutation.mutateAsync({
         content: parsedContent,
-        postId,
+        model,
+        modelId,
       });
-      setContent("");
     },
-    [content, mutation, postId]
+    [content, mutation, model, modelId]
   );
 
   return (
     <div className="flex items-start space-x-4">
       <div className="flex-shrink-0">
-        <img
-          className="inline-block h-10 w-10 rounded-full"
-          src={sessionData?.user?.image ?? "/user.png"}
-          alt="User profile"
-        />
+        <Avatar src={sessionData?.user?.image} alt="User profile" />
       </div>
       <div className="min-w-0 flex-1">
         <form onSubmit={handleSubmit}>

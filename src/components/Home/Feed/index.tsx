@@ -6,7 +6,6 @@ import { ErrorAlert } from "../../shared/ErrorAlert";
 import { InfiniteLoader } from "../../shared/InfiniteLoader";
 import { LoadingSpinner } from "../../shared/LoadingSpinner";
 import { Activity, ActivityProps } from "./Activity";
-import { ActivityOfert } from "./Activity/Ofert";
 
 export const Feed: React.FC = () => {
   const limit = useFeedLimit();
@@ -29,7 +28,7 @@ export const Feed: React.FC = () => {
   );
 
   return (
-    <div className="mx-auto flex max-w-xl flex-col gap-2">
+    <div className="mx-auto flex max-w-xl flex-col gap-4">
       {isLoading ? (
         <div className="flex items-center justify-center">
           <LoadingSpinner />
@@ -48,7 +47,11 @@ export const Feed: React.FC = () => {
         <>
           {data.pages.map((page) =>
             page.items.map((item) => (
-              <Activity key={item.id} {...(item as ActivityProps)} />
+              <Activity
+                key={item.id}
+                {...(item as ActivityProps)}
+                type={item.type as any}
+              />
             ))
           )}
           <InfiniteLoader
@@ -58,8 +61,6 @@ export const Feed: React.FC = () => {
           />
         </>
       )}
-      <ActivityOfert />
-      <ActivityOfert />
     </div>
   );
 };
