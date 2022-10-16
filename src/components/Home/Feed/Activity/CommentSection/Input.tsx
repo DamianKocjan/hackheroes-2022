@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import React, { useCallback, useState } from "react";
 import { trpc } from "../../../../../utils/trpc";
 import { Avatar } from "../../../../shared/Avatar";
+import { Textarea } from "../../../../shared/Input/Textarea";
 
 interface CommentInputProps {
   model: "post" | "ofert" | "event" | "poll";
@@ -50,11 +51,9 @@ export const CommentInput: React.FC<CommentInputProps> = ({
             <label htmlFor="comment" className="sr-only">
               Add your comment
             </label>
-            <textarea
-              rows={3}
+            <Textarea
               name="comment"
               id="comment"
-              className="block w-full resize-none border-0 border-b border-transparent p-0 pb-2 focus:border-indigo-600 focus:ring-0 sm:text-sm"
               placeholder="Add your comment..."
               value={content}
               onChange={(e) => setContent(e.target.value)}

@@ -1,5 +1,6 @@
 import { Popover, Transition } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowClockwise,
@@ -88,14 +89,16 @@ export const Nav: React.FC = () => {
   return (
     <Popover className="relative bg-white">
       <div className="flex items-center justify-between px-4 py-6 sm:px-6 md:justify-start md:space-x-10">
-        <div className="flex justify-start lg:w-0 lg:flex-1">
+        <div className="-mt-2 flex h-10 justify-start lg:w-0 lg:flex-1 ">
           <Link href="/">
             <a>
-              <span className="sr-only">E-Osiedle</span>
-              <img
+              <span className="sr-only">This Place</span>
+              <Image
                 className="h-8 w-auto sm:h-10"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                alt=""
+                src="/logo.png"
+                alt="This Place logo"
+                width={60}
+                height={60}
               />
             </a>
           </Link>
@@ -285,11 +288,13 @@ export const Nav: React.FC = () => {
           <div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
             <div className="px-5 pt-5 pb-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <img
+                <div className="h-10">
+                  <Image
                     className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                    alt="E-Osiedle"
+                    src="/logo.png"
+                    alt="This Place logo"
+                    width={60}
+                    height={60}
                   />
                 </div>
                 <div className="-mr-2">
