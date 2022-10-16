@@ -57,7 +57,7 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
           <h3 className="text-lg">{title}</h3>
           <img
             src={image}
-            alt="ofert"
+            alt={`Image of ofert ${title}`}
             className="my-1 h-64 w-full rounded-md object-cover"
           />
           <div className="-mt-1 flex text-sm text-gray-500">

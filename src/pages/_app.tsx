@@ -21,9 +21,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
       </Head>
 
       <DefaultSeo
-        defaultTitle="E-Osiedle"
-        titleTemplate="%s | E-Osiedle"
-        description="E-Osiedle website"
+        defaultTitle="This Place"
+        titleTemplate="%s | This Place"
+        description="This Place website"
       />
 
       <NProgress />
