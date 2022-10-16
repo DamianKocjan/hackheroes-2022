@@ -74,6 +74,7 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
           {data !== undefined && (
             <Button
               type="button"
+              className="mt-2"
               onClick={async () =>
                 await mutateAsync({
                   eventId: id,

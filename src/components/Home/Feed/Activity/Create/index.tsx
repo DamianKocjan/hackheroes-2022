@@ -85,7 +85,8 @@ export const CreateActivity: React.FC = () => {
           data.event.description.trim() &&
           data.event.from.trim() &&
           data.event.to.trim() &&
-          data.event.location.trim()
+          data.event.location.trim() &&
+          new Date(data.event.from) < new Date(data.event.to)
         );
     }
   }, [data, activityType]);
