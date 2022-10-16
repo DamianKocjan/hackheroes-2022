@@ -51,20 +51,34 @@ export const commentRouter = t.router({
     .mutation(async ({ ctx, input }) => {
       const { model, modelId, content } = input;
 
-      await ctx.prisma.comment.create({
-        data: {
-          content: content,
-          [model]: {
-            connect: {
-              id: modelId,
+      await ctx.prisma.$transaction([
+        ctx.prisma.comment.create({
+          data: {
+            content: content,
+            [model]: {
+              connect: {
+                id: modelId,
+              },
+            },
+            user: {
+              connect: {
+                id: ctx.session.user.id,
+              },
             },
           },
-          user: {
-            connect: {
-              id: ctx.session.user.id,
+        }),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        ctx.prisma[model].update({
+          where: {
+            id: modelId,
+          },
+          data: {
+            numberOfComments: {
+              increment: 1,
             },
           },
-        },
-      });
+        }),
+      ]);
     }),
 });
