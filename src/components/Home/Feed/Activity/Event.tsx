@@ -5,7 +5,9 @@ import { useFormatRelativeDate } from "../../../../hooks/formatters/useFormatRel
 import { ModelData } from "../../../../types";
 import { classNames } from "../../../../utils/classnames";
 import { isToday } from "../../../../utils/date";
+import { trpc } from "../../../../utils/trpc";
 import { Avatar } from "../../../shared/Avatar";
+import { Button } from "../../../shared/Button";
 import { CommentSection } from "./CommentSection";
 import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
@@ -29,6 +31,13 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
     [createdAt, dateFormatter]
   );
   const [openCommentSection, setOpenCommentSection] = useState(false);
+
+  const { data, refetch } = trpc.event.isInterestedIn.useQuery({ eventId: id });
+  const { mutateAsync } = trpc.event.interestedIn.useMutation({
+    onSuccess() {
+      refetch();
+    },
+  });
 
   return (
     <Activity>
@@ -62,6 +71,18 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
             , {location}
           </span>
           <span className="prose-sm text-gray-900">{description}</span>
+          {data !== undefined && (
+            <Button
+              type="button"
+              onClick={async () =>
+                await mutateAsync({
+                  eventId: id,
+                })
+              }
+            >
+              {data ? "I'm interest in event!" : "Interested in event?"}
+            </Button>
+          )}
         </div>
       </Activity.Body>
       <Activity.Footer>
