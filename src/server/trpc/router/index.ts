@@ -3,12 +3,14 @@ import { t } from "../trpc";
 import { authRouter } from "./auth";
 import { commentRouter } from "./comment";
 import { feedRouter } from "./feed";
+import { interactionRouter } from "./interaction";
 import { pollRouter } from "./poll";
 
 export const appRouter = t.router({
   auth: authRouter,
   comment: commentRouter,
   feed: feedRouter,
+  interaction: interactionRouter,
   poll: pollRouter,
 });
 

@@ -22,8 +22,6 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
   image,
   price,
   description,
-  interactions,
-  interactionsCount,
   _count,
 }) => {
   const dateFormatter = useFormatRelativeDate();
@@ -83,12 +81,7 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
-            <Interactions
-              interactions={interactions}
-              interactionsCount={interactionsCount}
-              modelId={id}
-              modelType="ofert"
-            />
+            <Interactions modelId={id} model="ofert" />
             <div className="flex-1" />
             <button
               className={classNames(

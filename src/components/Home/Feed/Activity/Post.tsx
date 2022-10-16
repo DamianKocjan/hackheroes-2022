@@ -17,8 +17,6 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
   createdAt,
   title,
   content,
-  interactions,
-  interactionsCount,
   _count,
 }) => {
   const dateFormatter = useFormatRelativeDate();
@@ -53,12 +51,7 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
-            <Interactions
-              interactions={interactions}
-              interactionsCount={interactionsCount}
-              modelId={id}
-              modelType="ofert"
-            />
+            <Interactions modelId={id} model="post" />
             <div className="flex-1" />
             <button
               className={classNames(

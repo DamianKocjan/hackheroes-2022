@@ -3,12 +3,14 @@ import Link from "next/link";
 import React, { useMemo } from "react";
 import { useFormatRelativeDate } from "../../../../../hooks/formatters/useFormatRelativeDate";
 import { Avatar } from "../../../../shared/Avatar";
+import { Interactions } from "../Interactions";
 
 interface CommentProps extends PComment {
   user: User;
 }
 
 export const Comment: React.FC<CommentProps> = ({
+  id,
   content,
   updatedAt,
   createdAt,
@@ -42,6 +44,7 @@ export const Comment: React.FC<CommentProps> = ({
             )}
           </div>
           <p className="mt-0.5 text-sm text-gray-500">{content}</p>
+          <Interactions model="comment" modelId={id} />
         </div>
       </div>
     </div>

@@ -19,8 +19,6 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
   createdAt,
   title,
   description,
-  interactions,
-  interactionsCount,
   _count,
 }) => {
   const dateFormatter = useFormatRelativeDate();
@@ -36,9 +34,14 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
     isError: pollOptionsError,
     error: pollOptionsErrorData,
     refetch,
-  } = trpc.poll.options.useQuery({
-    pollId: id,
-  });
+  } = trpc.poll.options.useQuery(
+    {
+      pollId: id,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const totalVotes = useMemo(
     () =>
@@ -120,12 +123,7 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
-            <Interactions
-              interactions={interactions}
-              interactionsCount={interactionsCount}
-              modelId={id}
-              modelType="poll"
-            />
+            <Interactions modelId={id} model="poll" />
             <div className="flex-1" />
             <button
               className={classNames(

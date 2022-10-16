@@ -18,7 +18,7 @@ const ActivityFooter: React.FC<Props> = ({ children }) => (
 
 export function Activity({ children }: Props) {
   return (
-    <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
+    <div className="divide-y divide-gray-200 rounded-lg bg-white shadow">
       {children}
     </div>
   );

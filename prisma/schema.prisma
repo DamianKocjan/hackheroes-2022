@@ -139,7 +139,7 @@ model Comment {
 
 enum InteractionType {
     LIKE
-    DISLIKE
+    HAHA
     SAD
     ANGRY
     LOVE
