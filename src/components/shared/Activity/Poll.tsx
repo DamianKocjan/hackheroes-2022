@@ -89,7 +89,7 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
             ) : pollOptionsError ? (
               <div className="text-red-500">
                 {pollOptionsErrorData?.message ||
-                  pollOptionsErrorData.toString()}
+                  pollOptionsErrorData?.toString()}
               </div>
             ) : (
               pollOptions &&

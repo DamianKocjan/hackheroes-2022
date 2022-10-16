@@ -188,7 +188,7 @@ export const CreateActivity: React.FC = () => {
               <h3 className="flex items-center text-lg text-red-500">
                 <WarningCircle className="mr-1 h-5 w-5 text-red-600" /> Error
               </h3>
-              <p className="text-sm">{error.message}</p>
+              <p className="text-sm">{error?.message || error?.toString()}</p>
             </div>
           )}
 
