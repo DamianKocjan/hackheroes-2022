@@ -1,8 +1,8 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { CaretDown, Check } from "phosphor-react";
 import React, { Fragment } from "react";
-import { Input } from "../../../../shared/Input/Input";
-import { Textarea } from "../../../../shared/Input/Textarea";
+import { Input } from "../../Input/Input";
+import { Textarea } from "../../Input/Textarea";
 import { ActivityCreateData, HandleSetOfertData } from "./types";
 
 interface OfertProps {

@@ -31,14 +31,20 @@ export const feedRouter = t.router({
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().nullish(),
+        exclude: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 50;
-      const { cursor } = input;
+      const { cursor, exclude } = input;
 
       const content = await ctx.prisma.activity.findMany({
         take: limit + 1,
+        where: {
+          id: {
+            not: exclude,
+          },
+        },
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
           createdAt: "desc",
@@ -54,7 +60,6 @@ export const feedRouter = t.router({
               where: { id: contentItem.id },
               include: {
                 user: true,
-                interactions: true,
                 _count: {
                   select: {
                     interactions: true,
@@ -68,7 +73,6 @@ export const feedRouter = t.router({
               where: { id: contentItem.id },
               include: {
                 user: true,
-                interactions: true,
                 _count: {
                   select: {
                     interactions: true,
@@ -82,7 +86,6 @@ export const feedRouter = t.router({
               where: { id: contentItem.id },
               include: {
                 user: true,
-                interactions: true,
                 _count: {
                   select: {
                     interactions: true,
@@ -97,7 +100,6 @@ export const feedRouter = t.router({
               where: { id: contentItem.id },
               include: {
                 user: true,
-                interactions: true,
                 _count: {
                   select: {
                     interactions: true,

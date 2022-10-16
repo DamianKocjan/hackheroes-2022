@@ -1,18 +1,18 @@
 import { Popover, Transition } from "@headlessui/react";
 import { useLottie } from "lottie-react";
-import React, { ComponentProps, Fragment, useCallback, useMemo } from "react";
-import { useNumberFormatter } from "../../../../hooks/formatters/useNumberFormatter";
-import { classNames } from "../../../../utils/classnames";
-import { trpc } from "../../../../utils/trpc";
+import React, { forwardRef, Fragment, useCallback, useMemo } from "react";
+import { useNumberFormatter } from "../../../hooks/formatters/useNumberFormatter";
+import { classNames } from "../../../utils/classnames";
+import { trpc } from "../../../utils/trpc";
 
-import angryAnimation from "../../../../../public/angry.json";
-import hahaAnimation from "../../../../../public/haha.json";
-import likeAnimation from "../../../../../public/like.json";
-import loveAnimation from "../../../../../public/love.json";
-import sadAnimation from "../../../../../public/sad.json";
-import wowAnimation from "../../../../../public/wow.json";
+import angryAnimation from "../../../../public/angry.json";
+import hahaAnimation from "../../../../public/haha.json";
+import likeAnimation from "../../../../public/like.json";
+import loveAnimation from "../../../../public/love.json";
+import sadAnimation from "../../../../public/sad.json";
+import wowAnimation from "../../../../public/wow.json";
 
-interface InteractionProps extends ComponentProps<"button"> {
+interface InteractionProps {
   animationData: unknown;
   alt: string;
   className?: string;
@@ -22,33 +22,31 @@ interface InteractionProps extends ComponentProps<"button"> {
   disabled?: boolean;
 }
 
-const Interaction: React.FC<InteractionProps> = ({
-  alt,
-  animationData,
-  lottieClassName,
-  ...props
-}) => {
-  const { View, play, stop } = useLottie({
-    animationData,
-    loop: true,
-    autoplay: false,
-    alt,
-    className: lottieClassName,
-  });
+const Interaction = forwardRef<HTMLButtonElement, InteractionProps>(
+  function Interaction({ alt, animationData, lottieClassName, ...props }, ref) {
+    const { View, play, stop } = useLottie({
+      animationData,
+      loop: true,
+      autoplay: false,
+      alt,
+      className: lottieClassName,
+    });
 
-  const handleMouseOver = useCallback(() => play(), [play]);
-  const handleMouseLeave = useCallback(() => stop(), [stop]);
+    const handleMouseOver = useCallback(() => play(), [play]);
+    const handleMouseLeave = useCallback(() => stop(), [stop]);
 
-  return (
-    <button
-      onMouseOver={handleMouseOver}
-      onMouseLeave={handleMouseLeave}
-      {...props}
-    >
-      {View}
-    </button>
-  );
-};
+    return (
+      <button
+        onMouseOver={handleMouseOver}
+        onMouseLeave={handleMouseLeave}
+        {...props}
+        ref={ref}
+      >
+        {View}
+      </button>
+    );
+  }
+);
 
 const interactionAnimations = {
   LIKE: likeAnimation,

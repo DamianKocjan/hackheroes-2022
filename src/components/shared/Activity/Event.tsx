@@ -1,13 +1,13 @@
 import { Event } from "@prisma/client";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
-import { useFormatRelativeDate } from "../../../../hooks/formatters/useFormatRelativeDate";
-import { ModelData } from "../../../../types";
-import { classNames } from "../../../../utils/classnames";
-import { isToday } from "../../../../utils/date";
-import { trpc } from "../../../../utils/trpc";
-import { Avatar } from "../../../shared/Avatar";
-import { Button } from "../../../shared/Button";
+import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
+import { ModelData } from "../../../types";
+import { classNames } from "../../../utils/classnames";
+import { isToday } from "../../../utils/date";
+import { trpc } from "../../../utils/trpc";
+import { Avatar } from "../Avatar";
+import { Button } from "../Button";
 import { CommentSection } from "./CommentSection";
 import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
@@ -25,9 +25,12 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
   description,
   _count,
 }) => {
+  createdAt = new Date(createdAt);
+  from = new Date(from);
+  to = new Date(to);
   const dateFormatter = useFormatRelativeDate();
   const formatedDate = useMemo(
-    () => dateFormatter(createdAt),
+    () => dateFormatter(new Date(createdAt)),
     [createdAt, dateFormatter]
   );
   const [openCommentSection, setOpenCommentSection] = useState(false);
@@ -57,7 +60,9 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
       </Activity.Navbar>
       <Activity.Body>
         <div className="flex flex-col">
-          <h3 className="text-lg">{title}</h3>
+          <h3 className="text-lg">
+            <Link href={`/activity/${id}`}>{title}</Link>
+          </h3>
           <span className="-mt-1 text-sm text-gray-500">
             <time dateTime={from.toLocaleString()}>
               {isToday(from)

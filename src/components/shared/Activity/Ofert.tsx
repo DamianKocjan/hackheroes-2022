@@ -1,11 +1,11 @@
 import { Ofert } from "@prisma/client";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
-import { useCurrencyFormatter } from "../../../../hooks/formatters/useCurrencyFormatter";
-import { useFormatRelativeDate } from "../../../../hooks/formatters/useFormatRelativeDate";
-import { ModelData } from "../../../../types";
-import { classNames } from "../../../../utils/classnames";
-import { Avatar } from "../../../shared/Avatar";
+import { useCurrencyFormatter } from "../../../hooks/formatters/useCurrencyFormatter";
+import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
+import { ModelData } from "../../../types";
+import { classNames } from "../../../utils/classnames";
+import { Avatar } from "../Avatar";
 import { CommentSection } from "./CommentSection";
 import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
@@ -24,6 +24,7 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
   description,
   _count,
 }) => {
+  createdAt = new Date(createdAt);
   const dateFormatter = useFormatRelativeDate();
   const formatedDate = useMemo(
     () => dateFormatter(createdAt),
@@ -54,7 +55,9 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
       </Activity.Navbar>
       <Activity.Body>
         <div className="flex flex-col">
-          <h3 className="text-lg">{title}</h3>
+          <h3 className="text-lg">
+            <Link href={`/activity/${id}`}>{title}</Link>
+          </h3>
           <img
             src={image}
             alt={`Image of ofert ${title}`}

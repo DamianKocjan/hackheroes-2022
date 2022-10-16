@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { Container } from "postcss";
+import { Container } from "../common/Container";
 
 export const Landing: NextPage = () => {
   return (

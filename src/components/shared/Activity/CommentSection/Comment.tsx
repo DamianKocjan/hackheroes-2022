@@ -1,8 +1,8 @@
 import type { Comment as PComment, User } from "@prisma/client";
 import Link from "next/link";
 import React, { useMemo } from "react";
-import { useFormatRelativeDate } from "../../../../../hooks/formatters/useFormatRelativeDate";
-import { Avatar } from "../../../../shared/Avatar";
+import { useFormatRelativeDate } from "../../../../hooks/formatters/useFormatRelativeDate";
+import { Avatar } from "../../Avatar";
 import { Interactions } from "../Interactions";
 
 interface CommentProps extends PComment {

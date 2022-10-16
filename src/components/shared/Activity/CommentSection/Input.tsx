@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
 import React, { useCallback, useState } from "react";
-import { trpc } from "../../../../../utils/trpc";
-import { Avatar } from "../../../../shared/Avatar";
-import { Textarea } from "../../../../shared/Input/Textarea";
+import { trpc } from "../../../../utils/trpc";
+import { Avatar } from "../../Avatar";
+import { Textarea } from "../../Input/Textarea";
 
 interface CommentInputProps {
   model: "post" | "ofert" | "event" | "poll";

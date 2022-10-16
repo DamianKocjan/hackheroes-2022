@@ -10,7 +10,7 @@ type PartialPost = Partial<Post>;
 type PartialEvent = Partial<Event>;
 type PartialPoll = Partial<Poll>;
 
-type ActivityType = "ofert" | "post" | "event" | "poll";
+export type ActivityType = "ofert" | "post" | "event" | "poll";
 
 export interface ActivityProps
   extends PartialOfert,

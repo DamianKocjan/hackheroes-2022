@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
-import { useCommentLimit } from "../../../../../hooks/useCommentLimit";
-import { trpc } from "../../../../../utils/trpc";
-import { Button } from "../../../../shared/Button";
-import { ErrorAlert } from "../../../../shared/ErrorAlert";
-import { LoadingSpinner } from "../../../../shared/LoadingSpinner";
+import { useCommentLimit } from "../../../../hooks/useCommentLimit";
+import { trpc } from "../../../../utils/trpc";
+import { Button } from "../../Button";
+import { ErrorAlert } from "../../ErrorAlert";
+import { LoadingSpinner } from "../../LoadingSpinner";
 import { Comment } from "./Comment";
 import { CommentInput } from "./Input";
 

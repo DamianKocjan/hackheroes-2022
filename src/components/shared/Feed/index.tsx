@@ -1,14 +1,26 @@
+import dynamic from "next/dynamic";
 import React from "react";
 import { useFeedLimit } from "../../../hooks/useFeedLimit";
 import { trpc } from "../../../utils/trpc";
-import { EmptyState } from "../../shared/EmptyState";
-import { ErrorAlert } from "../../shared/ErrorAlert";
-import { InfiniteLoader } from "../../shared/InfiniteLoader";
-import { LoadingSpinner } from "../../shared/LoadingSpinner";
-import { Activity, ActivityProps } from "./Activity";
-import { CreateActivity } from "./Activity/Create";
+import { Activity, ActivityProps, ActivityType } from "../Activity";
+import { EmptyState } from "../EmptyState";
+import { ErrorAlert } from "../ErrorAlert";
+import { InfiniteLoader } from "../InfiniteLoader";
+import { LoadingSpinner } from "../LoadingSpinner";
 
-export const Feed: React.FC = () => {
+const DynamicCreateActivity = dynamic(
+  () => import("../Activity/Create").then((mod) => mod.CreateActivity),
+  {
+    ssr: false,
+  }
+);
+
+interface FeedProps {
+  withCreate?: boolean;
+  exclude?: string;
+}
+
+export const Feed: React.FC<FeedProps> = ({ exclude, withCreate }) => {
   const limit = useFeedLimit();
   const {
     data,
@@ -21,6 +33,7 @@ export const Feed: React.FC = () => {
   } = trpc.feed.getAll.useInfiniteQuery(
     {
       limit,
+      exclude,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -30,7 +43,7 @@ export const Feed: React.FC = () => {
 
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-4">
-      <CreateActivity />
+      {withCreate && <DynamicCreateActivity />}
 
       {isLoading ? (
         <div className="flex items-center justify-center">
@@ -53,7 +66,7 @@ export const Feed: React.FC = () => {
               <Activity
                 key={item.id}
                 {...(item as ActivityProps)}
-                type={item.type as any}
+                type={item.type as ActivityType}
               />
             ))
           )}

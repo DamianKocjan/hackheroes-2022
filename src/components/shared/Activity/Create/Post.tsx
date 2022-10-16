@@ -1,6 +1,6 @@
 import React from "react";
-import { Input } from "../../../../shared/Input/Input";
-import { Textarea } from "../../../../shared/Input/Textarea";
+import { Input } from "../../Input/Input";
+import { Textarea } from "../../Input/Textarea";
 import { ActivityCreateData, HandleSetPostData } from "./types";
 
 interface PostProps {

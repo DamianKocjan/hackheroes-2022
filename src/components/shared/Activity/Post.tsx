@@ -1,10 +1,10 @@
 import type { Post } from "@prisma/client";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
-import { useFormatRelativeDate } from "../../../../hooks/formatters/useFormatRelativeDate";
-import { ModelData } from "../../../../types";
-import { classNames } from "../../../../utils/classnames";
-import { Avatar } from "../../../shared/Avatar";
+import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
+import { ModelData } from "../../../types";
+import { classNames } from "../../../utils/classnames";
+import { Avatar } from "../Avatar";
 import { CommentSection } from "./CommentSection";
 import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
@@ -19,6 +19,7 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
   content,
   _count,
 }) => {
+  createdAt = new Date(createdAt);
   const dateFormatter = useFormatRelativeDate();
   const formatedDate = useMemo(
     () => dateFormatter(createdAt),
@@ -44,7 +45,9 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
       </Activity.Navbar>
       <Activity.Body>
         <div className="flex flex-col">
-          <h3 className="text-lg">{title}</h3>
+          <h3 className="text-lg">
+            <Link href={`/activity/${id}`}>{title}</Link>
+          </h3>
           <span className="prose-sm text-gray-900">{content}</span>
         </div>
       </Activity.Body>

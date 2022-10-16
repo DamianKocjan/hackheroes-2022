@@ -2,11 +2,11 @@ import { Poll } from "@prisma/client";
 import Link from "next/link";
 import { Check } from "phosphor-react";
 import React, { useMemo, useState } from "react";
-import { useFormatRelativeDate } from "../../../../hooks/formatters/useFormatRelativeDate";
-import { ModelData } from "../../../../types";
-import { classNames } from "../../../../utils/classnames";
-import { trpc } from "../../../../utils/trpc";
-import { Avatar } from "../../../shared/Avatar";
+import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
+import { ModelData } from "../../../types";
+import { classNames } from "../../../utils/classnames";
+import { trpc } from "../../../utils/trpc";
+import { Avatar } from "../Avatar";
 import { CommentSection } from "./CommentSection";
 import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
@@ -21,6 +21,7 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
   description,
   _count,
 }) => {
+  createdAt = new Date(createdAt);
   const dateFormatter = useFormatRelativeDate();
   const formatedDate = useMemo(
     () => dateFormatter(createdAt),
@@ -73,7 +74,9 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
       </Activity.Navbar>
       <Activity.Body>
         <div className="flex flex-col">
-          <h3 className="text-lg">{title}</h3>
+          <h3 className="text-lg">
+            <Link href={`/activity/${id}`}>{title}</Link>
+          </h3>
           <span className="prose-sm text-gray-900">{description}</span>
           <div>
             {pollOptionsLoading ? (

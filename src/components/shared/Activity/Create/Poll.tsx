@@ -1,8 +1,8 @@
 import { X } from "phosphor-react";
 import React, { useCallback, useMemo, useState } from "react";
-import { Button } from "../../../../shared/Button";
-import { Input } from "../../../../shared/Input/Input";
-import { Textarea } from "../../../../shared/Input/Textarea";
+import { Button } from "../../Button";
+import { Input } from "../../Input/Input";
+import { Textarea } from "../../Input/Textarea";
 import { ActivityCreateData, HandleSetPollData } from "./types";
 
 interface PollProps {
