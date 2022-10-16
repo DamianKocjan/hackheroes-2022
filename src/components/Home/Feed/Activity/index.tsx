@@ -23,35 +23,11 @@ export interface ActivityProps
 
 export const Activity: React.FC<ActivityProps> = ({ type, ...props }) => {
   if (type === "ofert") {
-    return (
-      <ActivityOfert
-        {...(props as ActivityOfertProps)}
-        interactions={[]}
-        interactionsCount={0}
-      />
-    );
+    return <ActivityOfert {...(props as ActivityOfertProps)} />;
   } else if (type === "event") {
-    return (
-      <ActivityEvent
-        {...(props as ActivityEventProps)}
-        interactions={[]}
-        interactionsCount={0}
-      />
-    );
+    return <ActivityEvent {...(props as ActivityEventProps)} />;
   } else if (type === "poll") {
-    return (
-      <ActivityPoll
-        {...(props as ActivityPollProps)}
-        interactions={[]}
-        interactionsCount={0}
-      />
-    );
+    return <ActivityPoll {...(props as ActivityPollProps)} />;
   }
-  return (
-    <ActivityPost
-      {...(props as ActivityPostProps)}
-      interactions={[]}
-      interactionsCount={0}
-    />
-  );
+  return <ActivityPost {...(props as ActivityPostProps)} />;
 };
