@@ -16,7 +16,7 @@ export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["images.unsplash.com"],
+    domains: ["images.unsplash.com", "tailwindui.com"],
   },
   // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
   i18n: {

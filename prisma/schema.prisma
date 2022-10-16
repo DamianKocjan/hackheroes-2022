@@ -8,15 +8,16 @@ generator client {
 datasource db {
     provider = "postgresql"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading: 
+    // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
 }
 
 model Activity {
-    id   String @id @default(uuid())
-    type String
+    id        String   @id @default(uuid())
+    type      String
+    createdAt DateTime @default(now())
 }
 
 enum Condition {
@@ -26,31 +27,36 @@ enum Condition {
 }
 
 model Ofert {
-    id          String    @id @default(cuid())
-    title       String
-    description String
-    price       Decimal   @db.Decimal(10, 2)
-    condition   Condition
-    // TODO: multiple images
-    image       String
-    category    String
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    user        User      @relation(fields: [userId], references: [id])
-    userId      String
-}
-
-// TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
-model Post {
-    id               String    @id @default(cuid())
+    id               String        @id @default(cuid())
     title            String
-    content          String
-    createdAt        DateTime  @default(now())
-    updatedAt        DateTime  @updatedAt
-    user             User      @relation(fields: [userId], references: [id])
+    description      String
+    price            Decimal       @db.Decimal(10, 2)
+    condition        Condition
+    // TODO: multiple images
+    image            String
+    category         String
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+    user             User          @relation(fields: [userId], references: [id])
     userId           String
     comments         Comment[]
-    numberOfComments Int       @default(0)
+    numberOfComments Int           @default(0)
+    // TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+    interactions     Interaction[]
+}
+
+model Post {
+    id               String        @id @default(cuid())
+    title            String
+    content          String
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+    user             User          @relation(fields: [userId], references: [id])
+    userId           String
+    comments         Comment[]
+    numberOfComments Int           @default(0)
+    // TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+    interactions     Interaction[]
 }
 
 model Event {
@@ -65,6 +71,9 @@ model Event {
     user              User                @relation(fields: [userId], references: [id])
     userId            String
     interestedInEvent InterestedInEvent[]
+    comments          Comment[]
+    numberOfComments  Int                 @default(0)
+    interactions      Interaction[]
 }
 
 model InterestedInEvent {
@@ -76,14 +85,18 @@ model InterestedInEvent {
 }
 
 model Poll {
-    id          String   @id @default(cuid())
-    title       String
-    description String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    user        User     @relation(fields: [userId], references: [id])
-    userId      String
-    options     Option[]
+    id               String        @id @default(cuid())
+    title            String
+    description      String
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+    user             User          @relation(fields: [userId], references: [id])
+    userId           String
+    options          Option[]
+    comments         Comment[]
+    numberOfComments Int           @default(0)
+    // TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+    interactions     Interaction[]
 }
 
 model Option {
@@ -100,31 +113,42 @@ model Vote {
     userId   String
     option   Option @relation(fields: [optionId], references: [id])
     optionId String
+
+    @@unique([userId, optionId])
 }
 
 // TODO: nested comments
-// TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
 model Comment {
-    id        String   @id @default(cuid())
-    content   String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    user      User     @relation(fields: [userId], references: [id])
-    userId    String
-    post      Post     @relation(fields: [postId], references: [id])
-    postId    String
+    id           String        @id @default(cuid())
+    content      String
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    user         User          @relation(fields: [userId], references: [id])
+    userId       String
+    post         Post?         @relation(fields: [postId], references: [id])
+    postId       String?
+    ofert        Ofert?        @relation(fields: [ofertId], references: [id])
+    ofertId      String?
+    event        Event?        @relation(fields: [eventId], references: [id])
+    eventId      String?
+    poll         Poll?         @relation(fields: [pollId], references: [id])
+    pollId       String?
+    // TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+    interactions Interaction[]
 }
 
 enum InteractionType {
     LIKE
-    DISLIKE
+    HAHA
     SAD
     ANGRY
     LOVE
+    WOW
 }
 
 enum InteractionModel {
     POST
+    OFERT
     COMMENT
     EVENT
     POLL
@@ -138,7 +162,15 @@ model Interaction {
     updatedAt DateTime         @updatedAt
     user      User             @relation(fields: [userId], references: [id])
     userId    String
+    post      Post?            @relation(fields: [postId], references: [id])
     postId    String?
+    ofert     Ofert?           @relation(fields: [ofertId], references: [id])
+    ofertId   String?
+    event     Event?           @relation(fields: [eventId], references: [id])
+    eventId   String?
+    poll      Poll?            @relation(fields: [pollId], references: [id])
+    pollId    String?
+    comment   Comment?         @relation(fields: [commentId], references: [id])
     commentId String?
 }
 
