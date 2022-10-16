@@ -1,0 +1,228 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url      = env("DATABASE_URL")
+}
+
+model Activity {
+    id        String   @id @default(uuid())
+    type      String
+    createdAt DateTime @default(now())
+}
+
+enum Condition {
+    NEW
+    USED
+    UNKNOWN
+}
+
+model Ofert {
+    id               String        @id @default(cuid())
+    title            String
+    description      String
+    price            Decimal       @db.Decimal(10, 2)
+    condition        Condition
+    // TODO: multiple images
+    image            String
+    category         String
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+    user             User          @relation(fields: [userId], references: [id])
+    userId           String
+    comments         Comment[]
+    numberOfComments Int           @default(0)
+    // TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+    interactions     Interaction[]
+}
+
+model Post {
+    id               String        @id @default(cuid())
+    title            String
+    content          String
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+    user             User          @relation(fields: [userId], references: [id])
+    userId           String
+    comments         Comment[]
+    numberOfComments Int           @default(0)
+    // TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+    interactions     Interaction[]
+}
+
+model Event {
+    id                String              @id @default(cuid())
+    title             String
+    description       String
+    from              DateTime
+    to                DateTime
+    location          String
+    createdAt         DateTime            @default(now())
+    updatedAt         DateTime            @updatedAt
+    user              User                @relation(fields: [userId], references: [id])
+    userId            String
+    interestedInEvent InterestedInEvent[]
+    comments          Comment[]
+    numberOfComments  Int                 @default(0)
+    interactions      Interaction[]
+}
+
+model InterestedInEvent {
+    id      String @id @default(cuid())
+    user    User   @relation(fields: [userId], references: [id])
+    userId  String
+    event   Event  @relation(fields: [eventId], references: [id])
+    eventId String
+}
+
+model Poll {
+    id               String        @id @default(cuid())
+    title            String
+    description      String
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+    user             User          @relation(fields: [userId], references: [id])
+    userId           String
+    options          Option[]
+    comments         Comment[]
+    numberOfComments Int           @default(0)
+    // TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+    interactions     Interaction[]
+}
+
+model Option {
+    id     String @id @default(cuid())
+    title  String
+    poll   Poll   @relation(fields: [pollId], references: [id])
+    pollId String
+    votes  Vote[]
+}
+
+model Vote {
+    id       String @id @default(cuid())
+    user     User   @relation(fields: [userId], references: [id])
+    userId   String
+    option   Option @relation(fields: [optionId], references: [id])
+    optionId String
+
+    @@unique([userId, optionId])
+}
+
+// TODO: nested comments
+model Comment {
+    id           String        @id @default(cuid())
+    content      String
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    user         User          @relation(fields: [userId], references: [id])
+    userId       String
+    post         Post?         @relation(fields: [postId], references: [id])
+    postId       String?
+    ofert        Ofert?        @relation(fields: [ofertId], references: [id])
+    ofertId      String?
+    event        Event?        @relation(fields: [eventId], references: [id])
+    eventId      String?
+    poll         Poll?         @relation(fields: [pollId], references: [id])
+    pollId       String?
+    // TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
+    interactions Interaction[]
+}
+
+enum InteractionType {
+    LIKE
+    HAHA
+    SAD
+    ANGRY
+    LOVE
+    WOW
+}
+
+enum InteractionModel {
+    POST
+    OFERT
+    COMMENT
+    EVENT
+    POLL
+}
+
+model Interaction {
+    id        String           @id @default(cuid())
+    type      InteractionType
+    model     InteractionModel
+    createdAt DateTime         @default(now())
+    updatedAt DateTime         @updatedAt
+    user      User             @relation(fields: [userId], references: [id])
+    userId    String
+    post      Post?            @relation(fields: [postId], references: [id])
+    postId    String?
+    ofert     Ofert?           @relation(fields: [ofertId], references: [id])
+    ofertId   String?
+    event     Event?           @relation(fields: [eventId], references: [id])
+    eventId   String?
+    poll      Poll?            @relation(fields: [pollId], references: [id])
+    pollId    String?
+    comment   Comment?         @relation(fields: [commentId], references: [id])
+    commentId String?
+}
+
+// Necessary for Next auth
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? // @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id                 String              @id @default(cuid())
+    name               String?
+    email              String?             @unique
+    emailVerified      DateTime?
+    image              String?
+    accounts           Account[]
+    sessions           Session[]
+    oferts             Ofert[]
+    posts              Post[]
+    comments           Comment[]
+    interactions       Interaction[]
+    events             Event[]
+    interestedInEvents InterestedInEvent[]
+    polls              Poll[]
+    votes              Vote[]
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
