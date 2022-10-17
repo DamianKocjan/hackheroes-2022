@@ -30,7 +30,7 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
   to = new Date(to);
   const dateFormatter = useFormatRelativeDate();
   const formatedDate = useMemo(
-    () => dateFormatter(new Date(createdAt)),
+    () => dateFormatter(createdAt),
     [createdAt, dateFormatter]
   );
   const [openCommentSection, setOpenCommentSection] = useState(false);
@@ -54,7 +54,12 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
             >
               {user.name}
             </Link>
-            <span className="text-sm text-gray-500">{formatedDate}</span>
+            <time
+              className="text-sm text-gray-500"
+              dateTime={createdAt.toLocaleString()}
+            >
+              {formatedDate}
+            </time>
           </div>
         </div>
       </Activity.Navbar>

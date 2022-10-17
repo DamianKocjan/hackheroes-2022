@@ -11,7 +11,7 @@ interface PostProps {
 export const Post: React.FC<PostProps> = ({ data, handleSetData }) => {
   return (
     <>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="title" className="sr-only">
           Title
         </label>
@@ -24,7 +24,7 @@ export const Post: React.FC<PostProps> = ({ data, handleSetData }) => {
           onChange={(e) => handleSetData("title", e.target.value)}
         />
       </div>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="content" className="sr-only">
           Your content
         </label>

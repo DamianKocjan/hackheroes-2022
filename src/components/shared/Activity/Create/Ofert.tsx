@@ -15,7 +15,7 @@ const conditionTypes = ["NEW", "USED", "UNKNOWN"];
 export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
   return (
     <>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="title" className="sr-only">
           Title
         </label>
@@ -28,7 +28,7 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
           onChange={(e) => handleSetData("title", e.target.value)}
         />
       </div>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="description" className="sr-only">
           Your description
         </label>
@@ -42,7 +42,7 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <div className="border-b border-gray-200 focus-within:border-indigo-600">
+        <div>
           <label htmlFor="price" className="sr-only">
             Price
           </label>
@@ -52,14 +52,15 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
             type="number"
             inputMode="numeric"
             pattern="^\d*(\.\d{0,2})?$"
+            min="0"
             required
             placeholder="Price..."
             value={data.price}
             onChange={(e) => handleSetData("price", parseFloat(e.target.value))}
-            className="border-none"
           />
         </div>
-        <div className="border-b border-gray-200 focus-within:border-indigo-600">
+
+        <div className="border-gray-200 focus-within:border-b-2 focus-within:border-indigo-600">
           <Listbox
             value={data.condition}
             onChange={(val) => handleSetData("condition", val)}
@@ -82,7 +83,7 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                   {conditionTypes.map((type, i) => (
                     <Listbox.Option
                       key={`condition-type-${i}`}
@@ -119,7 +120,7 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
           </Listbox>
         </div>
       </div>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="image" className="sr-only">
           Image
         </label>
@@ -133,7 +134,7 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
           onChange={(e) => handleSetData("image", e.target.value)}
         />
       </div>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="category" className="sr-only">
           Category
         </label>

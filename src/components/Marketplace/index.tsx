@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import { Container } from "../common/Container";
-import { Feed } from "../shared/Feed";
 import { GetBackToTop } from "../shared/GetBackToTop";
 import { CreateOfert } from "./CreateOfert";
+import { Feed } from "./Feed";
 import { Filter, Filters } from "./Filter";
 
 export const Marketplace: NextPage = () => {
@@ -19,11 +19,11 @@ export const Marketplace: NextPage = () => {
     <Container title="Marketplace">
       <div className="py-4">
         <GetBackToTop />
-        <div className="mx-auto flex max-w-xl flex-col gap-4">
-          <Filter data={filters} setData={(val: Filters) => setFilters(val)} />
+        <div className="mx-auto mb-8 flex max-w-xl flex-col">
           <CreateOfert />
+          <Filter data={filters} setData={(val: Filters) => setFilters(val)} />
         </div>
-        <Feed type="ofert" filters={filters} />
+        <Feed filters={filters} />
       </div>
     </Container>
   );

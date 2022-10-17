@@ -39,7 +39,12 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
             >
               {user.name}
             </Link>
-            <span className="text-sm text-gray-500">{formatedDate}</span>
+            <time
+              className="text-sm text-gray-500"
+              dateTime={createdAt.toLocaleString()}
+            >
+              {formatedDate}
+            </time>
           </div>
         </div>
       </Activity.Navbar>

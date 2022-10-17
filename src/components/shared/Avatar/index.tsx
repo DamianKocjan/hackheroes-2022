@@ -26,6 +26,7 @@ export const Avatar: React.FC<AvatarProps> = ({ alt, src }) => {
       width={40}
       height={40}
       loading="lazy"
+      referrerPolicy="no-referrer"
     />
   );
 };

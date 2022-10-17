@@ -31,7 +31,7 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
   );
 
   return (
-    <div className="mb-4 divide-y divide-gray-200 rounded-lg bg-white shadow shadow-indigo-300 transition-shadow hover:shadow-md">
+    <div className="divide-y divide-gray-200 rounded-lg bg-white shadow shadow-indigo-300 transition-shadow hover:shadow-md">
       <div className="px-4 py-5 sm:px-6">
         <div className="flex items-center gap-4">
           <h3 className="text-lg">Filter</h3>
@@ -39,7 +39,7 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
       </div>
       <div className="px-4 py-5 sm:p-6">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <div className="border-b border-gray-200 focus-within:border-indigo-600">
+          <div>
             <label htmlFor="title" className="sr-only">
               Product name
             </label>
@@ -47,7 +47,7 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
               name="title"
               id="title"
               placeholder="Product name..."
-              value={data.title}
+              value={filters.title}
               onChange={(e) =>
                 setFilters({
                   ...filters,
@@ -56,9 +56,9 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
               }
             />
           </div>
-          <div className="grid grid-cols-2 grid-rows-2 gap-2">
-            <div className="border-b border-gray-200 focus-within:border-indigo-600">
-              <label htmlFor="minPrice" className="text-sm text-gray-500">
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label htmlFor="minPrice" className="sr-only">
                 Min price
               </label>
               <Input
@@ -68,7 +68,7 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
                 inputMode="numeric"
                 pattern="^\d*(\.\d{0,2})?$"
                 placeholder="Min price..."
-                value={data.minPrice}
+                value={filters.minPrice}
                 onChange={(e) =>
                   setFilters({
                     ...filters,
@@ -77,8 +77,8 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
                 }
               />
             </div>
-            <div className="border-b border-gray-200 focus-within:border-indigo-600">
-              <label htmlFor="maxPrice" className="text-sm text-gray-500">
+            <div>
+              <label htmlFor="maxPrice" className="sr-only">
                 Max price
               </label>
               <Input
@@ -88,7 +88,8 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
                 inputMode="numeric"
                 pattern="^\d*(\.\d{0,2})?$"
                 placeholder="Max price..."
-                value={data.maxPrice}
+                min="0"
+                value={filters.maxPrice}
                 onChange={(e) =>
                   setFilters({
                     ...filters,
@@ -97,7 +98,7 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
                 }
               />
             </div>
-            <div className="border-b border-gray-200 focus-within:border-indigo-600">
+            <div>
               <label htmlFor="category" className="sr-only">
                 Category
               </label>
@@ -105,7 +106,7 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
                 name="category"
                 id="category"
                 placeholder="Category..."
-                value={data.category}
+                value={filters.category}
                 onChange={(e) =>
                   setFilters({
                     ...filters,
@@ -114,9 +115,9 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
                 }
               />
             </div>
-            <div className="border-b border-gray-200 focus-within:border-indigo-600">
+            <div className="border-gray-200 focus-within:border-b-2 focus-within:border-indigo-600">
               <Listbox
-                value={data.condition}
+                value={filters.condition}
                 onChange={(val) =>
                   setFilters({
                     ...filters,
@@ -127,7 +128,7 @@ export const Filter: React.FC<FilterProps> = ({ data, setData }) => {
                 <div className="relative mt-1">
                   <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-300 sm:text-base">
                     <span className="block truncate">
-                      Condition: {data.condition?.toLowerCase() || "ALL"}
+                      Condition: {filters.condition?.toLowerCase() || "ALL"}
                     </span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <CaretDown

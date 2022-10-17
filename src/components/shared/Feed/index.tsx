@@ -19,21 +19,9 @@ interface FeedProps {
   withCreate?: boolean;
   exclude?: string;
   type?: "post" | "ofert" | "event" | "poll";
-  filters?: {
-    title?: string;
-    condition?: "NEW" | "USED" | "UNKNOWN";
-    minPrice?: number;
-    maxPrice?: number;
-    category?: string;
-  };
 }
 
-export const Feed: React.FC<FeedProps> = ({
-  exclude,
-  type,
-  withCreate,
-  filters,
-}) => {
+export const Feed: React.FC<FeedProps> = ({ exclude, type, withCreate }) => {
   const limit = useFeedLimit();
   const {
     data,
@@ -48,7 +36,6 @@ export const Feed: React.FC<FeedProps> = ({
       limit,
       exclude,
       type,
-      filters,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,

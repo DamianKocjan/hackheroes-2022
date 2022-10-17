@@ -11,7 +11,7 @@ interface EventProps {
 export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
   return (
     <>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="title" className="sr-only">
           Title
         </label>
@@ -24,7 +24,7 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
           onChange={(e) => handleSetData("title", e.target.value)}
         />
       </div>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="description" className="sr-only">
           Your description
         </label>
@@ -38,7 +38,7 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <div className="border-b border-gray-200 focus-within:border-indigo-600">
+        <div>
           <label htmlFor="from" className="text-sm text-gray-500">
             From
           </label>
@@ -54,7 +54,7 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
             }
           />
         </div>
-        <div className="border-b border-gray-200 focus-within:border-indigo-600">
+        <div>
           <label htmlFor="to" className="text-sm text-gray-500">
             To
           </label>
@@ -71,7 +71,7 @@ export const Event: React.FC<EventProps> = ({ data, handleSetData }) => {
           />
         </div>
       </div>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="location" className="sr-only">
           Location
         </label>
