@@ -5,6 +5,7 @@ import { commentRouter } from "./comment";
 import { eventRouter } from "./event";
 import { feedRouter } from "./feed";
 import { interactionRouter } from "./interaction";
+import { ofertRouter } from "./ofert";
 import { pollRouter } from "./poll";
 
 export const appRouter = t.router({
@@ -13,6 +14,7 @@ export const appRouter = t.router({
   event: eventRouter,
   feed: feedRouter,
   interaction: interactionRouter,
+  ofert: ofertRouter,
   poll: pollRouter,
 });
 

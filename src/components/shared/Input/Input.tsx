@@ -7,7 +7,7 @@ export const Input: React.FC<ComponentProps<"input">> = ({
 }) => (
   <input
     className={cx(
-      "block w-full border-0 border-b border-transparent p-0 pb-2 outline-none focus:border-indigo-600 focus:ring-0 sm:text-sm",
+      "block w-full border-0 border-b-2 border-transparent p-0 pb-2 outline-none focus:border-indigo-600 focus:outline-none focus:ring-0 sm:text-sm",
       className
     )}
     {...props}

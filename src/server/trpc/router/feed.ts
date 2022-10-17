@@ -32,11 +32,12 @@ export const feedRouter = t.router({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().nullish(),
         exclude: z.string().optional(),
+        type: z.enum(["post", "ofert", "event", "poll", "comment"]).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 50;
-      const { cursor, exclude } = input;
+      const { cursor, exclude, type } = input;
 
       const content = await ctx.prisma.activity.findMany({
         take: limit + 1,
@@ -44,6 +45,7 @@ export const feedRouter = t.router({
           id: {
             not: exclude,
           },
+          type,
         },
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {

@@ -26,7 +26,7 @@ export const Poll: React.FC<PollProps> = ({ data, handleSetData }) => {
 
   return (
     <>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="title" className="sr-only">
           Title
         </label>
@@ -39,7 +39,7 @@ export const Poll: React.FC<PollProps> = ({ data, handleSetData }) => {
           onChange={(e) => handleSetData("title", e.target.value)}
         />
       </div>
-      <div className="border-b border-gray-200 focus-within:border-indigo-600">
+      <div>
         <label htmlFor="description" className="sr-only">
           Your description
         </label>

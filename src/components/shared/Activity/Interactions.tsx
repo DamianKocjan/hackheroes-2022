@@ -3,7 +3,6 @@ import { useLottie } from "lottie-react";
 import React, {
   forwardRef,
   Fragment,
-  HtmlHTMLAttributes,
   useCallback,
   useMemo,
   useState,
