@@ -1,6 +1,13 @@
 import { Popover, Transition } from "@headlessui/react";
 import { useLottie } from "lottie-react";
-import React, { forwardRef, Fragment, useCallback, useMemo } from "react";
+import React, {
+  forwardRef,
+  Fragment,
+  HtmlHTMLAttributes,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { useNumberFormatter } from "../../../hooks/formatters/useNumberFormatter";
 import { classNames } from "../../../utils/classnames";
 import { trpc } from "../../../utils/trpc";
@@ -19,11 +26,16 @@ interface InteractionProps {
   lottieClassName?: string;
   title?: string;
   onClick?: () => void;
+  onDoubleClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
 }
 
 const Interaction = forwardRef<HTMLButtonElement, InteractionProps>(
-  function Interaction({ alt, animationData, lottieClassName, ...props }, ref) {
+  function Interaction(
+    { alt, animationData, lottieClassName, onDoubleClick, ...props },
+    ref
+  ) {
+    const [hasDBClicked, setHasDBClicked] = useState(false);
     const { View, play, stop } = useLottie({
       animationData,
       loop: true,
@@ -32,13 +44,29 @@ const Interaction = forwardRef<HTMLButtonElement, InteractionProps>(
       className: lottieClassName,
     });
 
-    const handleMouseOver = useCallback(() => play(), [play]);
-    const handleMouseLeave = useCallback(() => stop(), [stop]);
+    const handleMouseOver = useCallback(
+      () => !hasDBClicked && play(),
+      [hasDBClicked, play]
+    );
+    const handleMouseLeave = useCallback(
+      () => !hasDBClicked && stop(),
+      [hasDBClicked, stop]
+    );
 
     return (
       <button
         onMouseOver={handleMouseOver}
         onMouseLeave={handleMouseLeave}
+        onDoubleClick={(e) => {
+          setHasDBClicked(true);
+          onDoubleClick?.(e);
+
+          play();
+          setTimeout(() => {
+            stop();
+            setHasDBClicked(false);
+          }, 1000);
+        }}
         {...props}
         ref={ref}
       >
@@ -130,6 +158,19 @@ export const Interactions: React.FC<InteractionsProps> = ({
                         : "h-8 w-8"
                     }
                     aria-label="Like"
+                    onDoubleClick={async (
+                      e: React.MouseEvent<HTMLButtonElement>
+                    ) => {
+                      e.preventDefault();
+                      await mutateAsync({
+                        model,
+                        modelId,
+                        type:
+                          data?.hasInteracted?.type ||
+                          mostInteractions ||
+                          "LIKE",
+                      });
+                    }}
                   />
 
                   <Transition
