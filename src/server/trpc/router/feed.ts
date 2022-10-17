@@ -32,11 +32,20 @@ export const feedRouter = t.router({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().nullish(),
         exclude: z.string().optional(),
+        type: z.enum(["post", "ofert", "event", "poll", "comment"]).optional(),
+        filters: z.object({
+          title: z.string().optional(),
+          condition: z.enum(["NEW", "USED", "UNKNOWN"]).optional(),
+          minPrice: z.number().optional(),
+          maxPrice: z.number().optional(),
+          category: z.string().optional(),
+
+        }).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 50;
-      const { cursor, exclude } = input;
+      const { cursor, exclude, type, filters } = input;
 
       const content = await ctx.prisma.activity.findMany({
         take: limit + 1,
@@ -44,6 +53,7 @@ export const feedRouter = t.router({
           id: {
             not: exclude,
           },
+          type,
         },
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
