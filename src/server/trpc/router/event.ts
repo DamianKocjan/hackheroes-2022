@@ -67,4 +67,87 @@ export const eventRouter = t.router({
 
       return polinterestedInEventlVotes.length > 0;
     }),
+  calendar: t.procedure
+    .input(
+      z.object({
+        start: z.string(),
+        end: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const events = await ctx.prisma.event.findMany({
+        where: {
+          from: {
+            gte: new Date(input.start),
+          },
+          to: {
+            lte: new Date(input.end),
+          },
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      return events.map((event) => ({
+        title: event.title,
+        start: event.from,
+        end: event.to,
+        resource: {
+          id: event.id,
+          userId: event.userId,
+        },
+      }));
+    }),
+  create: authedProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        description: z.string(),
+        location: z.string(),
+        from: z.string(),
+        to: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.event.create({
+        data: {
+          title: input.title,
+          description: input.description,
+          location: input.location,
+          from: new Date(input.from),
+          to: new Date(input.to),
+          user: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    }),
+  get: t.procedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const event = await ctx.prisma.event.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          user: true,
+          _count: {
+            select: {
+              interestedInEvent: true,
+              comments: true,
+              interactions: true,
+            },
+          },
+        },
+      });
+
+      return event;
+    }),
 });
