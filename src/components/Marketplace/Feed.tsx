@@ -1,27 +1,24 @@
-import dynamic from "next/dynamic";
-import React from "react";
-import { useFeedLimit } from "../../../hooks/useFeedLimit";
-import { trpc } from "../../../utils/trpc";
-import { Activity, ActivityProps, ActivityType } from "../Activity";
-import { EmptyState } from "../EmptyState";
-import { ErrorAlert } from "../ErrorAlert";
-import { InfiniteLoader } from "../InfiniteLoader";
-import { LoadingSpinner } from "../LoadingSpinner";
-
-const DynamicCreateActivity = dynamic(
-  () => import("../Activity/Create").then((mod) => mod.CreateActivity),
-  {
-    ssr: false,
-  }
-);
+import React, { useEffect } from "react";
+import { useFeedLimit } from "../../hooks/useFeedLimit";
+import { trpc } from "../../utils/trpc";
+import { ActivityOfert } from "../shared/Activity/Ofert";
+import { EmptyState } from "../shared/EmptyState";
+import { ErrorAlert } from "../shared/ErrorAlert";
+import { InfiniteLoader } from "../shared/InfiniteLoader";
+import { LoadingSpinner } from "../shared/LoadingSpinner";
 
 interface FeedProps {
-  withCreate?: boolean;
   exclude?: string;
-  type?: "post" | "ofert" | "event" | "poll";
+  filters?: {
+    title?: string;
+    condition?: "NEW" | "USED" | "UNKNOWN";
+    minPrice?: number;
+    maxPrice?: number;
+    category?: string;
+  };
 }
 
-export const Feed: React.FC<FeedProps> = ({ exclude, type, withCreate }) => {
+export const Feed: React.FC<FeedProps> = ({ filters }) => {
   const limit = useFeedLimit();
   const {
     data,
@@ -31,11 +28,13 @@ export const Feed: React.FC<FeedProps> = ({ exclude, type, withCreate }) => {
     isError,
     isLoading,
     isFetching,
-  } = trpc.feed.getAll.useInfiniteQuery(
+    refetch,
+  } = trpc.ofert.getAll.useInfiniteQuery(
     {
       limit,
-      exclude,
-      type,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      filters,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -43,10 +42,12 @@ export const Feed: React.FC<FeedProps> = ({ exclude, type, withCreate }) => {
     }
   );
 
+  useEffect(() => {
+    refetch();
+  }, [filters, refetch]);
+
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-4">
-      {withCreate && <DynamicCreateActivity />}
-
       {isLoading ? (
         <div className="flex items-center justify-center">
           <LoadingSpinner />
@@ -58,19 +59,15 @@ export const Feed: React.FC<FeedProps> = ({ exclude, type, withCreate }) => {
         />
       ) : data?.pages?.[0]?.items.length === 0 ? (
         <EmptyState
-          title="No posts yet"
-          description="Seems like there are no posts yet."
+          title="No oferts yet"
+          description="Seems like there are no oferts yet."
         />
       ) : (
         <>
           {data !== undefined &&
             data.pages.map((page) =>
               page.items.map((item) => (
-                <Activity
-                  key={item.id}
-                  {...(item as ActivityProps)}
-                  type={item.type as ActivityType}
-                />
+                <ActivityOfert key={item.id} {...item} />
               ))
             )}
           <InfiniteLoader
