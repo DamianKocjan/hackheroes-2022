@@ -1,4 +1,5 @@
 import { Poll } from "@prisma/client";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Check } from "phosphor-react";
 import React, { useMemo, useState } from "react";
@@ -7,9 +8,21 @@ import { ModelData } from "../../../types";
 import { classNames } from "../../../utils/classnames";
 import { trpc } from "../../../utils/trpc";
 import { Avatar } from "../Avatar";
-import { CommentSection } from "./CommentSection";
-import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
+
+const DynamicInteractions = dynamic(
+  () => import("./Interactions").then((mod) => mod.Interactions),
+  {
+    ssr: false,
+  }
+);
+
+const DynamicCommentSection = dynamic(
+  () => import("./CommentSection").then((mod) => mod.CommentSection),
+  {
+    ssr: false,
+  }
+);
 
 export interface ActivityPollProps extends Poll, ModelData {}
 
@@ -131,7 +144,7 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
-            <Interactions modelId={id} model="poll" />
+            <DynamicInteractions modelId={id} model="poll" />
             <div className="flex-1" />
             <button
               className={classNames(
@@ -145,7 +158,9 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
           </div>
         </div>
       </Activity.Footer>
-      {openCommentSection && <CommentSection model="poll" modelId={id} />}
+      {openCommentSection && (
+        <DynamicCommentSection model="poll" modelId={id} />
+      )}
     </Activity>
   );
 };

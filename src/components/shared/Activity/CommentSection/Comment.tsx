@@ -1,9 +1,16 @@
 import type { Comment as PComment, User } from "@prisma/client";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import React, { useMemo } from "react";
 import { useFormatRelativeDate } from "../../../../hooks/formatters/useFormatRelativeDate";
 import { Avatar } from "../../Avatar";
-import { Interactions } from "../Interactions";
+
+const DynamicInteractions = dynamic(
+  () => import("../Interactions").then((mod) => mod.Interactions),
+  {
+    ssr: false,
+  }
+);
 
 interface CommentProps extends PComment {
   user: User;
@@ -44,7 +51,7 @@ export const Comment: React.FC<CommentProps> = ({
             )}
           </div>
           <p className="mt-0.5 text-sm text-gray-500">{content}</p>
-          <Interactions model="comment" modelId={id} />
+          <DynamicInteractions model="comment" modelId={id} />
         </div>
       </div>
     </div>

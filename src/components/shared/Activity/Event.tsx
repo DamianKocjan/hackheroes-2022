@@ -1,4 +1,5 @@
 import { Event } from "@prisma/client";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
@@ -8,9 +9,21 @@ import { isToday } from "../../../utils/date";
 import { trpc } from "../../../utils/trpc";
 import { Avatar } from "../Avatar";
 import { Button } from "../Button";
-import { CommentSection } from "./CommentSection";
-import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
+
+const DynamicInteractions = dynamic(
+  () => import("./Interactions").then((mod) => mod.Interactions),
+  {
+    ssr: false,
+  }
+);
+
+const DynamicCommentSection = dynamic(
+  () => import("./CommentSection").then((mod) => mod.CommentSection),
+  {
+    ssr: false,
+  }
+);
 
 export interface ActivityEventProps extends Event, ModelData {}
 
@@ -99,7 +112,7 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
-            <Interactions modelId={id} model="event" />
+            <DynamicInteractions modelId={id} model="event" />
             <div className="flex-1" />
             <button
               className={classNames(
@@ -113,7 +126,9 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
           </div>
         </div>
       </Activity.Footer>
-      {openCommentSection && <CommentSection model="event" modelId={id} />}
+      {openCommentSection && (
+        <DynamicCommentSection model="event" modelId={id} />
+      )}
     </Activity>
   );
 };

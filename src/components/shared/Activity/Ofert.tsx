@@ -1,4 +1,5 @@
 import { Ofert } from "@prisma/client";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 import { useCurrencyFormatter } from "../../../hooks/formatters/useCurrencyFormatter";
@@ -6,9 +7,21 @@ import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelati
 import { ModelData } from "../../../types";
 import { classNames } from "../../../utils/classnames";
 import { Avatar } from "../Avatar";
-import { CommentSection } from "./CommentSection";
-import { Interactions } from "./Interactions";
 import { Activity } from "./Layout";
+
+const DynamicInteractions = dynamic(
+  () => import("./Interactions").then((mod) => mod.Interactions),
+  {
+    ssr: false,
+  }
+);
+
+const DynamicCommentSection = dynamic(
+  () => import("./CommentSection").then((mod) => mod.CommentSection),
+  {
+    ssr: false,
+  }
+);
 
 export interface ActivityOfertProps extends Ofert, ModelData {}
 
@@ -91,7 +104,7 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
-            <Interactions modelId={id} model="ofert" />
+            <DynamicInteractions modelId={id} model="ofert" />
             <div className="flex-1" />
             <button
               className={classNames(
@@ -105,7 +118,9 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
           </div>
         </div>
       </Activity.Footer>
-      {openCommentSection && <CommentSection model="ofert" modelId={id} />}
+      {openCommentSection && (
+        <DynamicCommentSection model="ofert" modelId={id} />
+      )}
     </Activity>
   );
 };
