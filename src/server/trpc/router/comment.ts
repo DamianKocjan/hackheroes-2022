@@ -2,7 +2,7 @@ import { z } from "zod";
 import { authedProcedure, t } from "../trpc";
 
 export const commentRouter = t.router({
-  getAll: t.procedure
+  getAll: authedProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).nullish(),

@@ -1,6 +1,7 @@
 import { addMonths, format, getDay, parse, startOfWeek } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   Calendar,
@@ -29,6 +30,7 @@ const localizer = dateFnsLocalizer({
 
 // TODO: Make custom styles for the calendar
 export const Events: NextPage = () => {
+  useSession({ required: true });
   const [openCreatePopup, setOpenCreatePopup] = useState(false);
   const [openDetailPopup, setOpenDetailPopup] = useState(false);
   const [eventId, setEventId] = useState("");

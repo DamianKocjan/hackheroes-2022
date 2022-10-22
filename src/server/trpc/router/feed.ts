@@ -4,7 +4,7 @@ import { z } from "zod";
 import { authedProcedure, t } from "../trpc";
 
 export const feedRouter = t.router({
-  get: t.procedure
+  get: authedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const content = await ctx.prisma.activity.findUnique({
@@ -26,7 +26,7 @@ export const feedRouter = t.router({
         })) as Ofert | Post | Event | Poll,
       };
     }),
-  getAll: t.procedure
+  getAll: authedProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).nullish(),

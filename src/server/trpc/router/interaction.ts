@@ -22,7 +22,7 @@ const parseModelToType = (
 };
 
 export const interactionRouter = t.router({
-  get: t.procedure
+  get: authedProcedure
     .input(
       z.object({
         model,

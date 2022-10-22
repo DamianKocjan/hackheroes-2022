@@ -67,7 +67,7 @@ export const eventRouter = t.router({
 
       return polinterestedInEventlVotes.length > 0;
     }),
-  calendar: t.procedure
+  calendar: authedProcedure
     .input(
       z.object({
         start: z.string(),
@@ -125,7 +125,7 @@ export const eventRouter = t.router({
         },
       });
     }),
-  get: t.procedure
+  get: authedProcedure
     .input(
       z.object({
         id: z.string(),

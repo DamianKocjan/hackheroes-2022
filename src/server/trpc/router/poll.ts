@@ -2,7 +2,7 @@ import { z } from "zod";
 import { authedProcedure, t } from "../trpc";
 
 export const pollRouter = t.router({
-  options: t.procedure
+  options: authedProcedure
     .input(
       z.object({
         pollId: z.string(),

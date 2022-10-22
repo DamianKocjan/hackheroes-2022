@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Container } from "../common/Container";
 import { GetBackToTop } from "../shared/GetBackToTop";
@@ -7,6 +8,7 @@ import { Feed } from "./Feed";
 import { Filter, Filters } from "./Filter";
 
 export const Marketplace: NextPage = () => {
+  useSession({ required: true });
   const [filters, setFilters] = useState<Filters>({
     title: undefined,
     condition: undefined,
