@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useWindowResize } from "../../../hooks/useWindowResize";
 
 interface useInfinityLoaderArgs {
   callback: () => void;
@@ -27,6 +28,16 @@ export function useInfinityLoader({
       }
     }, options)
   );
+
+  useWindowResize(() => {
+    const currentRef = ref.current;
+    const currentObserver = observer.current;
+
+    if (currentRef) {
+      currentObserver.unobserve(currentRef);
+      currentObserver.observe(currentRef);
+    }
+  });
 
   useEffect(() => {
     const currentRef = ref.current;

@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { t } from "../trpc";
+import { authedProcedure, t } from "../trpc";
 
 export const ofertRouter = t.router({
-  getAll: t.procedure
+  getAll: authedProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).nullish(),

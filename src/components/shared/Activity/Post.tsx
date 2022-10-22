@@ -1,13 +1,26 @@
 import type { Post } from "@prisma/client";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
-import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
+import React, { useState } from "react";
 import { ModelData } from "../../../types";
 import { classNames } from "../../../utils/classnames";
 import { Avatar } from "../Avatar";
-import { CommentSection } from "./CommentSection";
-import { Interactions } from "./Interactions";
+import { Time } from "../Time";
 import { Activity } from "./Layout";
+
+const DynamicInteractions = dynamic(
+  () => import("./Interactions").then((mod) => mod.Interactions),
+  {
+    ssr: false,
+  }
+);
+
+const DynamicCommentSection = dynamic(
+  () => import("./CommentSection").then((mod) => mod.CommentSection),
+  {
+    ssr: false,
+  }
+);
 
 export interface ActivityPostProps extends Post, ModelData {}
 
@@ -20,11 +33,6 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
   _count,
 }) => {
   createdAt = new Date(createdAt);
-  const dateFormatter = useFormatRelativeDate();
-  const formatedDate = useMemo(
-    () => dateFormatter(createdAt),
-    [createdAt, dateFormatter]
-  );
   const [openCommentSection, setOpenCommentSection] = useState(false);
 
   return (
@@ -39,12 +47,9 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
             >
               {user.name}
             </Link>
-            <time
-              className="text-sm text-gray-500"
-              dateTime={createdAt.toLocaleString()}
-            >
-              {formatedDate}
-            </time>
+            <p className="text-sm text-gray-500">
+              <Time date={createdAt} />
+            </p>
           </div>
         </div>
       </Activity.Navbar>
@@ -59,7 +64,7 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
-            <Interactions modelId={id} model="post" />
+            <DynamicInteractions modelId={id} model="post" />
             <div className="flex-1" />
             <button
               className={classNames(
@@ -73,7 +78,9 @@ export const ActivityPost: React.FC<ActivityPostProps> = ({
           </div>
         </div>
       </Activity.Footer>
-      {openCommentSection && <CommentSection model="post" modelId={id} />}
+      {openCommentSection && (
+        <DynamicCommentSection model="post" modelId={id} />
+      )}
     </Activity>
   );
 };

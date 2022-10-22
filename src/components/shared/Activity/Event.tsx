@@ -1,16 +1,29 @@
 import { Event } from "@prisma/client";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
-import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
+import React, { useState } from "react";
 import { ModelData } from "../../../types";
 import { classNames } from "../../../utils/classnames";
 import { isToday } from "../../../utils/date";
 import { trpc } from "../../../utils/trpc";
 import { Avatar } from "../Avatar";
 import { Button } from "../Button";
-import { CommentSection } from "./CommentSection";
-import { Interactions } from "./Interactions";
+import { Time } from "../Time";
 import { Activity } from "./Layout";
+
+const DynamicInteractions = dynamic(
+  () => import("./Interactions").then((mod) => mod.Interactions),
+  {
+    ssr: false,
+  }
+);
+
+const DynamicCommentSection = dynamic(
+  () => import("./CommentSection").then((mod) => mod.CommentSection),
+  {
+    ssr: false,
+  }
+);
 
 export interface ActivityEventProps extends Event, ModelData {}
 
@@ -28,11 +41,6 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
   createdAt = new Date(createdAt);
   from = new Date(from);
   to = new Date(to);
-  const dateFormatter = useFormatRelativeDate();
-  const formatedDate = useMemo(
-    () => dateFormatter(createdAt),
-    [createdAt, dateFormatter]
-  );
   const [openCommentSection, setOpenCommentSection] = useState(false);
 
   const { data, refetch } = trpc.event.isInterestedIn.useQuery({ eventId: id });
@@ -54,12 +62,9 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
             >
               {user.name}
             </Link>
-            <time
-              className="text-sm text-gray-500"
-              dateTime={createdAt.toLocaleString()}
-            >
-              {formatedDate}
-            </time>
+            <p className="text-sm text-gray-500">
+              <Time date={createdAt} />
+            </p>
           </div>
         </div>
       </Activity.Navbar>
@@ -69,15 +74,15 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
             <Link href={`/activity/${id}`}>{title}</Link>
           </h3>
           <span className="-mt-1 text-sm text-gray-500">
-            <time dateTime={from.toLocaleString()}>
+            <Time date={from}>
               {isToday(from)
                 ? from.toLocaleTimeString()
                 : from.toLocaleDateString()}
-            </time>
+            </Time>
             {" - "}
-            <time dateTime={to.toLocaleString()}>
+            <Time date={to}>
               {isToday(to) ? to.toLocaleTimeString() : to.toLocaleDateString()}
-            </time>
+            </Time>
             , {location}
           </span>
           <span className="prose-sm text-gray-900">{description}</span>
@@ -99,7 +104,7 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
-            <Interactions modelId={id} model="event" />
+            <DynamicInteractions modelId={id} model="event" />
             <div className="flex-1" />
             <button
               className={classNames(
@@ -113,7 +118,9 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
           </div>
         </div>
       </Activity.Footer>
-      {openCommentSection && <CommentSection model="event" modelId={id} />}
+      {openCommentSection && (
+        <DynamicCommentSection model="event" modelId={id} />
+      )}
     </Activity>
   );
 };

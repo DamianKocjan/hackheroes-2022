@@ -1,15 +1,28 @@
 import { Poll } from "@prisma/client";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Check } from "phosphor-react";
 import React, { useMemo, useState } from "react";
-import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
 import { ModelData } from "../../../types";
 import { classNames } from "../../../utils/classnames";
 import { trpc } from "../../../utils/trpc";
 import { Avatar } from "../Avatar";
-import { CommentSection } from "./CommentSection";
-import { Interactions } from "./Interactions";
+import { Time } from "../Time";
 import { Activity } from "./Layout";
+
+const DynamicInteractions = dynamic(
+  () => import("./Interactions").then((mod) => mod.Interactions),
+  {
+    ssr: false,
+  }
+);
+
+const DynamicCommentSection = dynamic(
+  () => import("./CommentSection").then((mod) => mod.CommentSection),
+  {
+    ssr: false,
+  }
+);
 
 export interface ActivityPollProps extends Poll, ModelData {}
 
@@ -22,11 +35,6 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
   _count,
 }) => {
   createdAt = new Date(createdAt);
-  const dateFormatter = useFormatRelativeDate();
-  const formatedDate = useMemo(
-    () => dateFormatter(createdAt),
-    [createdAt, dateFormatter]
-  );
   const [openCommentSection, setOpenCommentSection] = useState(false);
 
   const {
@@ -68,12 +76,9 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
             >
               {user.name}
             </Link>
-            <time
-              className="text-sm text-gray-500"
-              dateTime={createdAt.toLocaleString()}
-            >
-              {formatedDate}
-            </time>
+            <p className="text-sm text-gray-500">
+              <Time date={createdAt} />
+            </p>
           </div>
         </div>
       </Activity.Navbar>
@@ -131,7 +136,7 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
       <Activity.Footer>
         <div className="flex flex-col">
           <div className="flex">
-            <Interactions modelId={id} model="poll" />
+            <DynamicInteractions modelId={id} model="poll" />
             <div className="flex-1" />
             <button
               className={classNames(
@@ -145,7 +150,9 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
           </div>
         </div>
       </Activity.Footer>
-      {openCommentSection && <CommentSection model="poll" modelId={id} />}
+      {openCommentSection && (
+        <DynamicCommentSection model="poll" modelId={id} />
+      )}
     </Activity>
   );
 };
