@@ -6,7 +6,7 @@
   /* Apply basic global styles to the body: */
   body {
     /* @apply bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased; */
-    @apply scroll-smooth;
+    @apply scroll-smooth antialiased;
   }
 
   /* Remove trailing margin from forms for some browsers: */
