@@ -1,14 +1,14 @@
 import { Event } from "@prisma/client";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
-import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
+import React, { useState } from "react";
 import { ModelData } from "../../../types";
 import { classNames } from "../../../utils/classnames";
 import { isToday } from "../../../utils/date";
 import { trpc } from "../../../utils/trpc";
 import { Avatar } from "../Avatar";
 import { Button } from "../Button";
+import { Time } from "../Time";
 import { Activity } from "./Layout";
 
 const DynamicInteractions = dynamic(
@@ -41,11 +41,6 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
   createdAt = new Date(createdAt);
   from = new Date(from);
   to = new Date(to);
-  const dateFormatter = useFormatRelativeDate();
-  const formatedDate = useMemo(
-    () => dateFormatter(createdAt),
-    [createdAt, dateFormatter]
-  );
   const [openCommentSection, setOpenCommentSection] = useState(false);
 
   const { data, refetch } = trpc.event.isInterestedIn.useQuery({ eventId: id });
@@ -67,12 +62,9 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
             >
               {user.name}
             </Link>
-            <time
-              className="text-sm text-gray-500"
-              dateTime={createdAt.toLocaleString()}
-            >
-              {formatedDate}
-            </time>
+            <p className="text-sm text-gray-500">
+              <Time date={createdAt} />
+            </p>
           </div>
         </div>
       </Activity.Navbar>
@@ -82,15 +74,15 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
             <Link href={`/activity/${id}`}>{title}</Link>
           </h3>
           <span className="-mt-1 text-sm text-gray-500">
-            <time dateTime={from.toLocaleString()}>
+            <Time date={from}>
               {isToday(from)
                 ? from.toLocaleTimeString()
                 : from.toLocaleDateString()}
-            </time>
+            </Time>
             {" - "}
-            <time dateTime={to.toLocaleString()}>
+            <Time date={to}>
               {isToday(to) ? to.toLocaleTimeString() : to.toLocaleDateString()}
-            </time>
+            </Time>
             , {location}
           </span>
           <span className="prose-sm text-gray-900">{description}</span>

@@ -3,10 +3,10 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 import { useCurrencyFormatter } from "../../../hooks/formatters/useCurrencyFormatter";
-import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
 import { ModelData } from "../../../types";
 import { classNames } from "../../../utils/classnames";
 import { Avatar } from "../Avatar";
+import { Time } from "../Time";
 import { Activity } from "./Layout";
 
 const DynamicInteractions = dynamic(
@@ -38,11 +38,6 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
   _count,
 }) => {
   createdAt = new Date(createdAt);
-  const dateFormatter = useFormatRelativeDate();
-  const formatedDate = useMemo(
-    () => dateFormatter(createdAt),
-    [createdAt, dateFormatter]
-  );
   const [openCommentSection, setOpenCommentSection] = useState(false);
   const numberFormatter = useCurrencyFormatter();
   const formatedPrice = useMemo(
@@ -64,12 +59,9 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
             >
               {user.name}
             </Link>
-            <time
-              className="text-sm text-gray-500"
-              dateTime={createdAt.toLocaleString()}
-            >
-              {formatedDate}
-            </time>
+            <p className="text-sm text-gray-500">
+              <Time date={createdAt} />
+            </p>
           </div>
         </div>
       </Activity.Navbar>

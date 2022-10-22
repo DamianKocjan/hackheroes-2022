@@ -3,11 +3,11 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Check } from "phosphor-react";
 import React, { useMemo, useState } from "react";
-import { useFormatRelativeDate } from "../../../hooks/formatters/useFormatRelativeDate";
 import { ModelData } from "../../../types";
 import { classNames } from "../../../utils/classnames";
 import { trpc } from "../../../utils/trpc";
 import { Avatar } from "../Avatar";
+import { Time } from "../Time";
 import { Activity } from "./Layout";
 
 const DynamicInteractions = dynamic(
@@ -35,11 +35,6 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
   _count,
 }) => {
   createdAt = new Date(createdAt);
-  const dateFormatter = useFormatRelativeDate();
-  const formatedDate = useMemo(
-    () => dateFormatter(createdAt),
-    [createdAt, dateFormatter]
-  );
   const [openCommentSection, setOpenCommentSection] = useState(false);
 
   const {
@@ -81,12 +76,9 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
             >
               {user.name}
             </Link>
-            <time
-              className="text-sm text-gray-500"
-              dateTime={createdAt.toLocaleString()}
-            >
-              {formatedDate}
-            </time>
+            <p className="text-sm text-gray-500">
+              <Time date={createdAt} />
+            </p>
           </div>
         </div>
       </Activity.Navbar>
