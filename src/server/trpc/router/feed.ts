@@ -64,7 +64,6 @@ export const feedRouter = t.router({
                 user: true,
                 _count: {
                   select: {
-                    interactions: true,
                     comments: true,
                   },
                 },
@@ -77,7 +76,6 @@ export const feedRouter = t.router({
                 user: true,
                 _count: {
                   select: {
-                    interactions: true,
                     comments: true,
                   },
                 },
@@ -90,7 +88,6 @@ export const feedRouter = t.router({
                 user: true,
                 _count: {
                   select: {
-                    interactions: true,
                     comments: true,
                     interestedInEvent: true,
                   },
@@ -104,7 +101,6 @@ export const feedRouter = t.router({
                 user: true,
                 _count: {
                   select: {
-                    interactions: true,
                     comments: true,
                   },
                 },

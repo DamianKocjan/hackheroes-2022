@@ -6,7 +6,6 @@ export interface Interaction {
 export interface ModelData {
   user: User;
   _count: {
-    interactions: number;
     comments: number;
   };
 }

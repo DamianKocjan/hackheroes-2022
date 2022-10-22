@@ -124,7 +124,7 @@ export const Events: NextPage = () => {
   );
 
   return (
-    <Container title="Marketplace">
+    <Container title="Events">
       <div className="py-4">
         <EventCreatePopup
           open={openCreatePopup}
