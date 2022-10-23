@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { ActivityDetail } from "../../components/ActivityDetail";
 import { getServerAuthSession } from "../../server/common/get-server-auth-session";
+import { getSignredUrl } from "../../server/trpc/utils/images";
 
 export default ActivityDetail;
 
@@ -57,8 +58,12 @@ export const getServerSideProps: GetServerSideProps = async ({
     });
 
     if (activityDetail) {
-      // @ts-ignore
-      activityDetail.price = parseFloat(activityDetail.price);
+      activityDetail = {
+        ...activityDetail,
+        // @ts-ignore
+        price: parseFloat(activityDetail.price),
+        image: await getSignredUrl(activityDetail.id),
+      };
     }
   } else if (activity.type === "post") {
     activityDetail = await prisma.post.findUnique({

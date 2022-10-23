@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { Event, Ofert, Poll, Post } from "@prisma/client";
 import cuid from "cuid";
 import { z } from "zod";
 import { authedProcedure, t } from "../trpc";
+import { createPresignedUrl, getSignredUrl } from "../utils/images";
 
 export const feedRouter = t.router({
   get: authedProcedure
@@ -16,14 +18,24 @@ export const feedRouter = t.router({
       if (!content) {
         throw new Error("NOT_FOUND");
       }
+
+      // @ts-ignore
+      let activity = (await ctx.prisma[content.type].findUnique({
+        where: {
+          id: content.id,
+        },
+      })) as Ofert | Post | Event | Poll;
+
+      if (activity && content.type === "ofert") {
+        activity = {
+          ...activity,
+          // @ts-ignore
+          image: await getSignredUrl(activity.id, activity.image),
+        };
+      }
+
       return {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        result: (await ctx.prisma[content.type].findUnique({
-          where: {
-            id: content.id,
-          },
-        })) as Ofert | Post | Event | Poll,
+        result: activity,
       };
     }),
   getAll: authedProcedure
@@ -69,6 +81,13 @@ export const feedRouter = t.router({
                 },
               },
             });
+
+            if (item) {
+              item = {
+                ...item,
+                image: await getSignredUrl(item.id),
+              };
+            }
           } else if (contentItem.type === "post") {
             item = await ctx.prisma.post.findUnique({
               where: { id: contentItem.id },
@@ -147,7 +166,7 @@ export const feedRouter = t.router({
               description: z.string(),
               price: z.number(),
               condition: z.enum(["NEW", "USED", "UNKNOWN"]),
-              image: z.string(),
+              image: z.any(),
               category: z.string(),
             })
             .optional(),
@@ -235,6 +254,16 @@ export const feedRouter = t.router({
             },
           }),
         ]);
+
+        const image = (await createPresignedUrl(id)) as {
+          url: string;
+          fields: Record<string, unknown>;
+        };
+
+        return {
+          id,
+          image,
+        };
       } else if (type === "event") {
         if (!data.event) {
           throw new Error("INVALID_DATA");

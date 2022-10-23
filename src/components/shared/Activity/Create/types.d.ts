@@ -11,7 +11,7 @@ export interface ActivityCreateData {
     description: string;
     price: number;
     condition: "NEW" | "USED" | "UNKNOWN";
-    image: string;
+    image?: File;
     category: string;
   };
   poll: {

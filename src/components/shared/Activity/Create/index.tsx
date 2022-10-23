@@ -35,7 +35,7 @@ export const CreateActivity: React.FC = () => {
       price: 0.0,
       category: "",
       condition: "UNKNOWN",
-      image: "",
+      image: undefined,
     },
     poll: {
       title: "",
@@ -91,11 +91,46 @@ export const CreateActivity: React.FC = () => {
     }
   }, [data, activityType]);
 
+  const handleUploadImage = useCallback(
+    async ({
+      url,
+      fields,
+    }: {
+      url: string;
+      fields: Record<string, unknown>;
+    }) => {
+      if (!data.ofert.image) return;
+
+      const headers = {
+        ...fields,
+        "Content-Type": data.ofert.image.type,
+        file: data.ofert.image,
+      };
+
+      const formData = new FormData();
+      for (const name in headers) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        formData.append(name, headers[name]);
+      }
+
+      await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+    },
+    [data]
+  );
+
   const router = useRouter();
   const { isLoading, isError, error, mutateAsync } =
     trpc.feed.create.useMutation({
       async onSuccess(data) {
-        router.push(`/activity/${data.id}`);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        handleUploadImage(data.image).then(() =>
+          router.push(`/activity/${data.id}`)
+        );
       },
     });
 
