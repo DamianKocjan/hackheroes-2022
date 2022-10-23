@@ -1,39 +1,35 @@
 import Link from "next/link";
-import {
-  FacebookLogo,
-  GithubLogo,
-  InstagramLogo,
-  TwitterLogo,
-} from "phosphor-react";
+import { FacebookLogo, GithubLogo, TwitterLogo } from "phosphor-react";
 
 const NAVIGATION = {
   main: [
-    { name: "About", href: "#" },
-    { name: "Blog", href: "#" },
-    { name: "Jobs", href: "#" },
-    { name: "Press", href: "#" },
-    { name: "Accessibility", href: "#" },
-    { name: "Partners", href: "#" },
+    {
+      name: "Home",
+      href: "/",
+    },
+    {
+      name: "Marketplace",
+      href: "/marketplace",
+    },
+    {
+      name: "Events",
+      href: "/events",
+    },
   ],
   social: [
     {
       name: "Facebook",
-      href: "#",
+      href: "https://www.facebook.com/antoni.kocjan",
       icon: () => <FacebookLogo className="h-6 w-6" aria-hidden="true" />,
     },
     {
-      name: "Instagram",
-      href: "#",
-      icon: () => <InstagramLogo className="h-6 w-6" aria-hidden="true" />,
-    },
-    {
       name: "Twitter",
-      href: "#",
+      href: "https://twitter.com/KocjanZs",
       icon: () => <TwitterLogo className="h-6 w-6" aria-hidden="true" />,
     },
     {
       name: "GitHub",
-      href: "#",
+      href: "https://github.com/DamianKocjan/hackheroes-2022",
       icon: () => <GithubLogo className="h-6 w-6" aria-hidden="true" />,
     },
   ],
