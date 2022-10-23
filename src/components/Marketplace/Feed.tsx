@@ -67,7 +67,8 @@ export const Feed: React.FC<FeedProps> = ({ filters }) => {
           {data !== undefined &&
             data.pages.map((page) =>
               page.items.map((item) => (
-                <ActivityOfert key={item.id} {...item} />
+                // TODO: type this
+                <ActivityOfert key={item.id} {...(item as any)} />
               ))
             )}
           <InfiniteLoader

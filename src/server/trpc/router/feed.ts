@@ -223,7 +223,9 @@ export const feedRouter = t.router({
               description: data.ofert.description,
               price: data.ofert.price,
               condition: data.ofert.condition,
-              image: data.ofert.image,
+              image: {
+                create: {},
+              },
               category: data.ofert.category,
               user: {
                 connect: {
