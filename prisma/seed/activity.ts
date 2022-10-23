@@ -58,7 +58,9 @@ async function createActivityOfert(prisma: PrismaClient, userId: string) {
         condition: randomCondition(),
         price: 100,
         category: "ELECTRONICS",
-        image: "https://source.unsplash.com/random",
+        image: {
+          create: {},
+        },
         user: {
           connect: {
             id: userId,

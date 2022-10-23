@@ -18,6 +18,10 @@ export const serverSchema = z.object({
   ),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  AMAZON_WS_ACCESS_KEY_ID: z.string(),
+  AMAZON_WS_SECRET_ACCESS_KEY: z.string(),
+  AMAZON_WS_REGION: z.string(),
+  AMAZON_WS_IDENTITY_POLL_ID: z.string(),
 });
 
 /**

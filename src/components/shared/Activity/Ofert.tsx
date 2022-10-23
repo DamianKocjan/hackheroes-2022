@@ -23,7 +23,9 @@ const DynamicCommentSection = dynamic(
   }
 );
 
-export interface ActivityOfertProps extends Ofert, ModelData {}
+export interface ActivityOfertProps extends Ofert, ModelData {
+  image: string;
+}
 
 export const ActivityOfert: React.FC<ActivityOfertProps> = ({
   id,
