@@ -67,13 +67,14 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
       </Activity.Navbar>
       <Activity.Body>
         <div className="flex flex-col">
-          <h3 className="text-lg">
+          <h3 className="text-lg font-semibold">
             <Link href={`/activity/${id}`}>{title}</Link>
           </h3>
           <img
             src={image}
             alt={`Image of ofert ${title}`}
             className="my-1 h-64 w-full rounded-md object-cover"
+            loading="lazy"
           />
           <div className="-mt-1 flex text-sm text-gray-500">
             <p>
@@ -82,7 +83,7 @@ export const ActivityOfert: React.FC<ActivityOfertProps> = ({
             <div className="flex-1" />
           </div>
           <span className="prose-sm text-gray-900">{description}</span>
-          <div className="mt-3 flex">
+          <div className="mt-3 flex items-center">
             <p className="text-lg font-semibold text-gray-900">
               <strong>{formatedPrice}</strong>
             </p>

@@ -43,7 +43,12 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
   to = new Date(to);
   const [openCommentSection, setOpenCommentSection] = useState(false);
 
-  const { data, refetch } = trpc.event.isInterestedIn.useQuery({ eventId: id });
+  const { data, refetch } = trpc.event.isInterestedIn.useQuery(
+    { eventId: id },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   const { mutateAsync } = trpc.event.interestedIn.useMutation({
     onSuccess() {
       refetch();
@@ -70,7 +75,7 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
       </Activity.Navbar>
       <Activity.Body>
         <div className="flex flex-col">
-          <h3 className="text-lg">
+          <h3 className="text-lg font-semibold">
             <Link href={`/activity/${id}`}>{title}</Link>
           </h3>
           <span className="-mt-1 text-sm text-gray-500">

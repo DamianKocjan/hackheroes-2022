@@ -41,7 +41,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <DefaultSeo
         defaultTitle="This Place"
         titleTemplate="%s | This Place"
-        description="This Place website"
+        description="This place is neighborhood social network, in which you can share your thoughts, ideas, and experiences."
       />
 
       <NProgress />

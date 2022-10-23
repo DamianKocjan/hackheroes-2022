@@ -84,7 +84,7 @@ export const ActivityPoll: React.FC<ActivityPollProps> = ({
       </Activity.Navbar>
       <Activity.Body>
         <div className="flex flex-col">
-          <h3 className="text-lg">
+          <h3 className="text-lg font-semibold">
             <Link href={`/activity/${id}`}>{title}</Link>
           </h3>
           <span className="prose-sm text-gray-900">{description}</span>
