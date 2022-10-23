@@ -27,8 +27,6 @@ export const Footer: React.FC = () => {
           <NavItem href="#">Contact Support</NavItem>
           <NavItemDivider />
           <NavItem href="#">Status</NavItem>
-          <NavItemDivider />
-          <NavItem href="#">Twitter</NavItem>
         </nav>
       </div>
     </footer>
