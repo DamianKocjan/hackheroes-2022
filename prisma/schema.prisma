@@ -15,7 +15,7 @@ datasource db {
 }
 
 model Activity {
-    id        String   @id @default(uuid())
+    id        String   @id @default(cuid())
     type      String
     createdAt DateTime @default(now())
 }
@@ -26,18 +26,23 @@ enum Condition {
     UNKNOWN
 }
 
+model Attachment {
+    id     String  @id @default(cuid())
+    oferts Ofert[]
+}
+
 model Ofert {
     id               String        @id @default(cuid())
     title            String
     description      String
     price            Decimal       @db.Decimal(10, 2)
     condition        Condition
-    // TODO: multiple images
-    image            String
+    image            Attachment    @relation(fields: [imageId], references: [id], onDelete: Restrict)
+    imageId          String
     category         String
     createdAt        DateTime      @default(now())
     updatedAt        DateTime      @updatedAt
-    user             User          @relation(fields: [userId], references: [id])
+    user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId           String
     comments         Comment[]
     numberOfComments Int           @default(0)
@@ -51,7 +56,7 @@ model Post {
     content          String
     createdAt        DateTime      @default(now())
     updatedAt        DateTime      @updatedAt
-    user             User          @relation(fields: [userId], references: [id])
+    user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId           String
     comments         Comment[]
     numberOfComments Int           @default(0)
@@ -68,7 +73,7 @@ model Event {
     location          String
     createdAt         DateTime            @default(now())
     updatedAt         DateTime            @updatedAt
-    user              User                @relation(fields: [userId], references: [id])
+    user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId            String
     interestedInEvent InterestedInEvent[]
     comments          Comment[]
@@ -78,9 +83,9 @@ model Event {
 
 model InterestedInEvent {
     id      String @id @default(cuid())
-    user    User   @relation(fields: [userId], references: [id])
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId  String
-    event   Event  @relation(fields: [eventId], references: [id])
+    event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
     eventId String
 }
 
@@ -90,7 +95,7 @@ model Poll {
     description      String
     createdAt        DateTime      @default(now())
     updatedAt        DateTime      @updatedAt
-    user             User          @relation(fields: [userId], references: [id])
+    user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId           String
     options          Option[]
     comments         Comment[]
@@ -102,16 +107,16 @@ model Poll {
 model Option {
     id     String @id @default(cuid())
     title  String
-    poll   Poll   @relation(fields: [pollId], references: [id])
+    poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
     pollId String
     votes  Vote[]
 }
 
 model Vote {
     id       String @id @default(cuid())
-    user     User   @relation(fields: [userId], references: [id])
+    user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId   String
-    option   Option @relation(fields: [optionId], references: [id])
+    option   Option @relation(fields: [optionId], references: [id], onDelete: Cascade)
     optionId String
 
     @@unique([userId, optionId])
@@ -123,15 +128,15 @@ model Comment {
     content      String
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt
-    user         User          @relation(fields: [userId], references: [id])
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId       String
-    post         Post?         @relation(fields: [postId], references: [id])
+    post         Post?         @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId       String?
-    ofert        Ofert?        @relation(fields: [ofertId], references: [id])
+    ofert        Ofert?        @relation(fields: [ofertId], references: [id], onDelete: Cascade)
     ofertId      String?
-    event        Event?        @relation(fields: [eventId], references: [id])
+    event        Event?        @relation(fields: [eventId], references: [id], onDelete: Cascade)
     eventId      String?
-    poll         Poll?         @relation(fields: [pollId], references: [id])
+    poll         Poll?         @relation(fields: [pollId], references: [id], onDelete: Cascade)
     pollId       String?
     // TODO: precalculate number of each interactions (eg. 10 likes, 5 dislikes, 3 love, etc)
     interactions Interaction[]
@@ -160,17 +165,17 @@ model Interaction {
     model     InteractionModel
     createdAt DateTime         @default(now())
     updatedAt DateTime         @updatedAt
-    user      User             @relation(fields: [userId], references: [id])
+    user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId    String
-    post      Post?            @relation(fields: [postId], references: [id])
+    post      Post?            @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId    String?
-    ofert     Ofert?           @relation(fields: [ofertId], references: [id])
+    ofert     Ofert?           @relation(fields: [ofertId], references: [id], onDelete: Cascade)
     ofertId   String?
-    event     Event?           @relation(fields: [eventId], references: [id])
+    event     Event?           @relation(fields: [eventId], references: [id], onDelete: Cascade)
     eventId   String?
-    poll      Poll?            @relation(fields: [pollId], references: [id])
+    poll      Poll?            @relation(fields: [pollId], references: [id], onDelete: Cascade)
     pollId    String?
-    comment   Comment?         @relation(fields: [commentId], references: [id])
+    comment   Comment?         @relation(fields: [commentId], references: [id], onDelete: Cascade)
     commentId String?
 }
 

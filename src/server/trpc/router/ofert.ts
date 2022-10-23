@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { authedProcedure, t } from "../trpc";
+import { getSignredUrl } from "../utils/images";
 
 export const ofertRouter = t.router({
   getAll: authedProcedure
@@ -62,6 +63,11 @@ export const ofertRouter = t.router({
           createdAt: "desc",
         },
       });
+
+      feed.map(async (ofert) => ({
+        ...ofert,
+        image: await getSignredUrl(ofert.id),
+      }));
 
       let nextCursor: string | undefined = undefined;
       if (feed.length > limit) {

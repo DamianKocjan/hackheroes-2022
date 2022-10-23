@@ -1,6 +1,7 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { CaretDown, Check } from "phosphor-react";
-import React, { Fragment } from "react";
+import React, { Fragment, useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { Input } from "../../Input/Input";
 import { Textarea } from "../../Input/Textarea";
 import { ActivityCreateData, HandleSetOfertData } from "./types";
@@ -13,6 +14,41 @@ interface OfertProps {
 const conditionTypes = ["NEW", "USED", "UNKNOWN"];
 
 export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
+  const [previewImage, setPreviewImage] = useState<string | ArrayBuffer | null>(
+    null
+  );
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+
+      if (!file) {
+        return;
+      }
+
+      handleSetData("image", file);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        e.target && setPreviewImage(e.target.result);
+      };
+      reader.readAsDataURL(new Blob([file], { type: file.type }));
+    },
+    [handleSetData]
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      "image/png": [".png"],
+      "image/jpeg": [".jpeg", ".jpg"],
+      "image/gif": [".gif"],
+    },
+    multiple: false,
+    maxFiles: 1,
+    maxSize: 25 * 1024 * 1024,
+  });
+
   return (
     <>
       <div>
@@ -121,18 +157,55 @@ export const Ofert: React.FC<OfertProps> = ({ data, handleSetData }) => {
         </div>
       </div>
       <div>
-        <label htmlFor="image" className="sr-only">
-          Image
-        </label>
-        <Input
-          name="image"
-          id="image"
-          type="image"
-          required
-          placeholder="Image..."
-          value={data.image}
-          onChange={(e) => handleSetData("image", e.target.value)}
-        />
+        <div
+          className="flex max-w-lg justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6"
+          {...getRootProps()}
+        >
+          <div className="space-y-1 text-center">
+            {previewImage ? (
+              <div className="flex">
+                <img
+                  src={previewImage.toString()}
+                  className="my-auto max-h-72 w-auto rounded-lg"
+                  alt="Preview"
+                />
+              </div>
+            ) : (
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 48 48"
+                aria-hidden="true"
+              >
+                <path
+                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+            <div className="flex text-sm text-gray-600">
+              <label
+                htmlFor="image"
+                className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+              >
+                <span>Upload a image</span>
+                <input
+                  id="image"
+                  name="image"
+                  type="file"
+                  className="sr-only"
+                  required
+                  {...getInputProps()}
+                />
+              </label>
+              <p className="pl-1">or drag and drop</p>
+            </div>
+            <p className="text-xs text-gray-500">PNG, JPG, GIF up to 25MB</p>
+          </div>
+        </div>
       </div>
       <div>
         <label htmlFor="category" className="sr-only">
