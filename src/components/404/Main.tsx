@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 export const Main: React.FC = () => (
@@ -12,15 +13,17 @@ export const Main: React.FC = () => (
           Page not found
         </h1>
         <p className="mt-2 text-base text-gray-500">
-          Sorry, we couldn’t find the page you’re looking for.
+          Sorry, we couldn&apos;t find the page you&apos;re looking for.
         </p>
         <div className="mt-6">
-          <a
-            href="#"
+          <Link
+            href="/"
             className="text-base font-medium text-indigo-600 hover:text-indigo-500"
           >
-            Go back home<span aria-hidden="true"> &rarr;</span>
-          </a>
+            <a>
+              Go back home<span aria-hidden="true"> &rarr;</span>
+            </a>
+          </Link>
         </div>
       </div>
     </div>
