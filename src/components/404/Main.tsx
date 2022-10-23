@@ -16,11 +16,8 @@ export const Main: React.FC = () => (
           Sorry, we couldn&apos;t find the page you&apos;re looking for.
         </p>
         <div className="mt-6">
-          <Link
-            href="/"
-            className="text-base font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            <a>
+          <Link href="/">
+            <a className="text-base font-medium text-indigo-600 hover:text-indigo-500">
               Go back home<span aria-hidden="true"> &rarr;</span>
             </a>
           </Link>
