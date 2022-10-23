@@ -41,7 +41,7 @@ Set environment variables
 - copy contents of `.env-example` to `.env`
 - fill variables
 
-Start the server
+Run project
 
 ```bash
 npm run dev
