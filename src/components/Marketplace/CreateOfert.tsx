@@ -17,7 +17,7 @@ export const CreateOfert: React.FC = () => {
     price: 0.0,
     category: "",
     condition: "UNKNOWN",
-    image: "",
+    image: undefined,
   });
 
   const handleSetData = useCallback(

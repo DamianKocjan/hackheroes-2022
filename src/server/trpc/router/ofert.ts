@@ -1,3 +1,4 @@
+import { Ofert, User } from "@prisma/client";
 import { z } from "zod";
 import { authedProcedure, t } from "../trpc";
 import { getSignredUrl } from "../utils/images";
@@ -53,7 +54,6 @@ export const ofertRouter = t.router({
           user: true,
           _count: {
             select: {
-              interactions: true,
               comments: true,
             },
           },
@@ -64,10 +64,19 @@ export const ofertRouter = t.router({
         },
       });
 
-      feed.map(async (ofert) => ({
-        ...ofert,
-        image: await getSignredUrl(ofert.id),
-      }));
+      const arr: (Ofert & {
+        user: User;
+        _count: {
+          comments: number;
+        };
+        image: string;
+      })[] = [];
+      for (const ofert of feed) {
+        arr.push({
+          ...ofert,
+          image: await getSignredUrl(ofert.id),
+        });
+      }
 
       let nextCursor: string | undefined = undefined;
       if (feed.length > limit) {
@@ -76,7 +85,7 @@ export const ofertRouter = t.router({
       }
 
       return {
-        items: feed,
+        items: arr,
         nextCursor,
       };
     }),
