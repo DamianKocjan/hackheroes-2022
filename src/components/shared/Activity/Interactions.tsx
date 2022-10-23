@@ -106,7 +106,10 @@ export const Interactions: React.FC<InteractionsProps> = ({
       }
     );
   const formattedInteractions = useMemo(
-    () => data?.interactions.map((i) => formatNumber.format(i.count)),
+    () =>
+      data?.interactions
+        .sort((a, b) => b.count - a.count)
+        .map((i) => formatNumber.format(i.count)),
     [data, formatNumber]
   );
   const mostInteractions = useMemo(
