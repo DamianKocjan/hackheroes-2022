@@ -43,7 +43,12 @@ export const ActivityEvent: React.FC<ActivityEventProps> = ({
   to = new Date(to);
   const [openCommentSection, setOpenCommentSection] = useState(false);
 
-  const { data, refetch } = trpc.event.isInterestedIn.useQuery({ eventId: id });
+  const { data, refetch } = trpc.event.isInterestedIn.useQuery(
+    { eventId: id },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   const { mutateAsync } = trpc.event.interestedIn.useMutation({
     onSuccess() {
       refetch();
